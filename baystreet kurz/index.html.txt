@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin 2050 | Interaktivní Průvodce</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-gold: #FFD700;
+            --neon-blue: #00F0FF;
+            --deep-bg: #030305;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--deep-bg);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            selection-background-color: var(--neon-gold);
+            selection-color: black;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* 3D Canvas Layer */
+        #canvas-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: -1; opacity: 0.6; pointer-events: none;
+        }
+
+        /* Modern Glass Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(255, 215, 0, 0.1);
+        }
+
+        /* Glow Effects */
+        .glow-text { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        .glow-blue { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-gold); }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FFF 0%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Icons ---
+        const Icon = ({ name, size = 24, className }) => {
+            useEffect(() => { if (window.lucide) window.lucide.createIcons(); }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
+        };
+
+        // --- 3D Background: Smooth Particles ---
+        const Background3D = () => {
+            const mountRef = useRef(null);
+            useEffect(() => {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                mountRef.current.appendChild(renderer.domElement);
+
+                // Particles - "Digital Dust"
+                const particlesGeometry = new THREE.BufferGeometry();
+                const count = 800;
+                const positions = new Float32Array(count * 3);
+                for(let i=0; i<count*3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 40;
+                }
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const particlesMaterial = new THREE.PointsMaterial({
+                    size: 0.05, color: 0xFFD700, transparent: true, opacity: 0.4
+                });
+                const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                scene.add(particleMesh);
+
+                // Golden Rings (Simulating Blockchain Links)
+                const rings = [];
+                const ringGeo = new THREE.TorusGeometry(3, 0.02, 16, 100);
+                const ringMat = new THREE.MeshBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.2 });
+                
+                for(let i=0; i<5; i++) {
+                    const ring = new THREE.Mesh(ringGeo, ringMat);
+                    ring.rotation.x = Math.random() * Math.PI;
+                    ring.rotation.y = Math.random() * Math.PI;
+                    ring.scale.setScalar(1 + i * 0.5);
+                    scene.add(ring);
+                    rings.push(ring);
+                }
+
+                camera.position.z = 10;
+                
+                let mouseX = 0, mouseY = 0;
+                const handleMouseMove = (e) => {
+                    mouseX = (e.clientX - window.innerWidth/2) * 0.0005;
+                    mouseY = (e.clientY - window.innerHeight/2) * 0.0005;
+                };
+                window.addEventListener('mousemove', handleMouseMove);
+
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    particleMesh.rotation.y += 0.001;
+                    particleMesh.rotation.x += -mouseY * 0.1;
+                    particleMesh.rotation.y += mouseX * 0.1;
+
+                    rings.forEach((ring, i) => {
+                        ring.rotation.x += 0.002 * (i+1);
+                        ring.rotation.y += 0.001;
+                    });
+                    
+                    renderer.render(scene, camera);
+                };
+                animate();
+
+                const handleResize = () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                };
+                window.addEventListener('resize', handleResize);
+
+                return () => {
+                    window.removeEventListener('mousemove', handleMouseMove);
+                    window.removeEventListener('resize', handleResize);
+                    if (mountRef.current) mountRef.current.innerHTML = '';
+                };
+            }, []);
+            return <div id="canvas-container" ref={mountRef}></div>;
+        };
+
+        // --- Interactive Demo: Centralization vs Decentralization ---
+        const CentralizationDemo = () => {
+            const [centralStatus, setCentralStatus] = useState("active"); // active, hacked
+            const [nodes, setNodes] = useState([true, true, true, true, true]); // true = active
+
+            const hackBank = () => setCentralStatus("hacked");
+            const resetBank = () => setCentralStatus("active");
+            
+            const toggleNode = (index) => {
+                const newNodes = [...nodes];
+                newNodes[index] = !newNodes[index];
+                setNodes(newNodes);
+            };
+
+            const allNodesDown = nodes.every(n => !n);
+
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-8">
+                    {/* Centralized Model */}
+                    <div className="glass-card p-6 flex flex-col items-center text-center">
+                        <h4 className="font-display font-bold text-gray-400 mb-4 text-sm tracking-widest">STARÝ SVĚT (BANKY)</h4>
+                        <div 
+                            onClick={hackBank}
+                            className={`w-24 h-24 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 ${centralStatus === 'hacked' ? 'bg-red-500/20 border-red-500 scale-95' : 'bg-blue-500/10 border-blue-500 hover:scale-105'} border-2`}
+                        >
+                            <Icon name={centralStatus === 'hacked' ? "alert-triangle" : "landmark"} size={40} className={centralStatus === 'hacked' ? "text-red-500" : "text-blue-400"} />
+                        </div>
+                        <div className="mt-4 h-12 flex items-center justify-center w-full">
+                            {centralStatus === 'hacked' ? (
+                                <div className="text-red-400 font-bold animate-pulse flex items-center gap-2">
+                                    <Icon name="x-circle" size={16} /> SERVER OFFLINE
+                                </div>
+                            ) : (
+                                <div className="text-blue-400 text-sm">Všechna data na jednom místě.<br/><span className="text-xs opacity-50">(Klikni pro simulaci útoku)</span></div>
+                            )}
+                        </div>
+                        {centralStatus === 'hacked' && <button onClick={resetBank} className="mt-2 text-xs text-gray-500 hover:text-white underline">Restartovat server</button>}
+                    </div>
+
+                    {/* Decentralized Model */}
+                    <div className="glass-card p-6 flex flex-col items-center text-center">
+                        <h4 className="font-display font-bold text-yellow-500/80 mb-4 text-sm tracking-widest">NOVÝ SVĚT (BITCOIN)</h4>
+                        <div className="relative w-48 h-32 flex flex-wrap justify-center items-center gap-4">
+                            {nodes.map((isActive, i) => (
+                                <div 
+                                    key={i}
+                                    onClick={() => toggleNode(i)}
+                                    className={`w-10 h-10 rounded-full border flex items-center justify-center cursor-pointer transition-all hover:scale-110 ${isActive ? 'bg-yellow-500 text-black border-yellow-400 shadow-[0_0_10px_#FFD700]' : 'bg-gray-800 text-gray-500 border-gray-700'}`}
+                                >
+                                    <Icon name="server" size={16} />
+                                </div>
+                            ))}
+                            {/* Lines simulating connections (simplified via CSS/SVG) */}
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30 z-[-1]">
+                                <line x1="20%" y1="50%" x2="80%" y2="50%" stroke={allNodesDown ? "#333" : "#FFD700"} strokeWidth="2" />
+                                <line x1="50%" y1="20%" x2="50%" y2="80%" stroke={allNodesDown ? "#333" : "#FFD700"} strokeWidth="2" />
+                            </svg>
+                        </div>
+                        <div className="mt-4 h-12 flex items-center justify-center w-full">
+                             {allNodesDown ? (
+                                <span className="text-red-500 font-bold">SÍŤ VYPNUTA (Téměř nemožné)</span>
+                             ) : (
+                                <span className="text-yellow-400 text-sm">Síť běží, i když část vypadne.<br/><span className="text-xs opacity-50 text-white">(Klikni na uzly pro vypnutí)</span></span>
+                             )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Interactive Demo: Wallet Generator ---
+        const WalletDemo = () => {
+            const [wallet, setWallet] = useState(null);
+            const [generating, setGenerating] = useState(false);
+
+            const createWallet = () => {
+                setGenerating(true);
+                setTimeout(() => {
+                    setWallet({
+                        private: "L5ez...8q9s (TAJNÉ!)",
+                        public: "bc1q...zm4x (SDÍLEJ)"
+                    });
+                    setGenerating(false);
+                }, 1500);
+            };
+
+            return (
+                <div className="glass-card p-8 w-full max-w-2xl mx-auto mt-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Icon name="key" size={100} />
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <Icon name="shield" className="text-blue-400" /> Tvoje digitální identita
+                    </h3>
+                    <p className="text-gray-400 mb-6 text-sm">
+                        Bitcoin nepotřebuje e-mail ani heslo. Používá "kryptografii". 
+                        Je to jako klíč od schránky, který nelze zkopírovat.
+                    </p>
+
+                    {!wallet ? (
+                        <button 
+                            onClick={createWallet}
+                            disabled={generating}
+                            className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 font-bold transition-all transform active:scale-95 flex justify-center items-center gap-2"
+                        >
+                            {generating ? (
+                                <><Icon name="loader" className="animate-spin" /> Generuji matematický pár...</>
+                            ) : (
+                                "Vytvořit moji první peněženku"
+                            )}
+                        </button>
+                    ) : (
+                        <div className="space-y-4 animate-float">
+                            <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+                                <div className="text-xs text-red-400 font-bold uppercase mb-1 flex items-center gap-2">
+                                    <Icon name="lock" size={12} /> Soukromý klíč (Tvoje heslo)
+                                </div>
+                                <div className="font-mono text-white text-lg tracking-widest blur-[2px] hover:blur-none transition-all cursor-pointer" title="Najet pro zobrazení">
+                                    {wallet.private}
+                                </div>
+                                <div className="text-[10px] text-gray-500 mt-1">Nikdy nikomu neukazuj. Kdo má klíč, má peníze.</div>
+                            </div>
+                            
+                            <div className="flex justify-center">
+                                <Icon name="arrow-down" className="text-gray-600" />
+                            </div>
+
+                            <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
+                                <div className="text-xs text-green-400 font-bold uppercase mb-1 flex items-center gap-2">
+                                    <Icon name="globe" size={12} /> Veřejná adresa (Tvoje číslo účtu)
+                                </div>
+                                <div className="font-mono text-white text-lg tracking-widest">
+                                    {wallet.public}
+                                </div>
+                                <div className="text-[10px] text-gray-500 mt-1">Toto můžeš poslat komukoliv, aby ti zaplatil.</div>
+                            </div>
+                            
+                            <button onClick={() => setWallet(null)} className="text-xs text-gray-500 underline w-full text-center mt-2">Zkusit znovu</button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // --- Improved Mining Game ---
+        const SimpleMiner = ({ onSuccess }) => {
+            const [progress, setProgress] = useState(0);
+            const [isMining, setIsMining] = useState(false);
+            const [blockSealed, setBlockSealed] = useState(false);
+
+            const mineBlock = () => {
+                if(blockSealed) return;
+                setIsMining(true);
+                const interval = setInterval(() => {
+                    setProgress(prev => {
+                        if (prev >= 100) {
+                            clearInterval(interval);
+                            setIsMining(false);
+                            setBlockSealed(true);
+                            onSuccess();
+                            return 100;
+                        }
+                        return prev + Math.random() * 5;
+                    });
+                }, 100);
+            };
+
+            return (
+                <div className="glass-card p-6 w-full mt-6 text-center">
+                    <div className="flex justify-between items-center mb-4">
+                        <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${blockSealed ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
+                            <span className="text-xs font-mono text-gray-400">STATUS BLOKU: {blockSealed ? "ZAPEČETĚNO" : "OTEVŘENO"}</span>
+                        </div>
+                        <Icon name="box" className={blockSealed ? "text-green-500" : "text-yellow-500"} />
+                    </div>
+
+                    <div className="h-48 bg-black/40 rounded-xl border border-white/5 mb-4 relative flex items-center justify-center overflow-hidden">
+                        {/* Abstract visualisation of transactions inside */}
+                        <div className="absolute inset-0 p-4 opacity-30 text-xs font-mono text-left space-y-1">
+                            <div className="text-green-400">Alice -> Bob: 0.5 BTC</div>
+                            <div className="text-blue-400">Karel -> Jana: 0.01 BTC</div>
+                            <div className="text-purple-400">Exchange -> Wallet: 50 BTC</div>
+                        </div>
+
+                        {blockSealed ? (
+                            <div className="z-10 bg-green-500/20 p-4 rounded-full border border-green-500 backdrop-blur-md transform scale-125 transition-transform">
+                                <Icon name="check" size={48} className="text-green-400" />
+                            </div>
+                        ) : (
+                            <div className="z-10 text-center">
+                                <div className="text-2xl font-bold mb-1">{Math.floor(progress)}%</div>
+                                <div className="text-xs text-yellow-500">Hledání digitální pečeti...</div>
+                            </div>
+                        )}
+                        
+                        {/* Progress Bar Background */}
+                        <div 
+                            className="absolute bottom-0 left-0 h-1 bg-yellow-500 transition-all duration-100"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+
+                    <p className="text-sm text-gray-400 mb-4">
+                        {blockSealed 
+                            ? "Blok byl úspěšně přidán do řetězce! Nikdo už nemůže změnit transakce uvnitř."
+                            : "Těžaři používají elektřinu k tomu, aby 'zamkli' transakce do bloku. Zkus to taky."}
+                    </p>
+
+                    <button 
+                        onClick={mineBlock}
+                        disabled={isMining || blockSealed}
+                        className={`w-full py-3 rounded-lg font-bold transition-all ${
+                            blockSealed 
+                            ? 'bg-green-600 text-white cursor-default' 
+                            : 'bg-yellow-500 hover:bg-yellow-400 text-black shadow-[0_0_15px_#EAB308]'
+                        }`}
+                    >
+                        {isMining ? "Probíhá výpočet..." : blockSealed ? "HOTOVO" : "TĚŽIT (ZABEZPEČIT BLOK)"}
+                    </button>
+                </div>
+            );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            const [scrollProgress, setScrollProgress] = useState(0);
+
+            // Animate on scroll
+            useEffect(() => {
+                const handleScroll = () => {
+                    const total = document.documentElement.scrollTop;
+                    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    setScrollProgress(total / height);
+                };
+                window.addEventListener('scroll', handleScroll);
+
+                // Reveal animations
+                gsap.utils.toArray('.reveal-section').forEach(section => {
+                    gsap.from(section, {
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        },
+                        y: 50,
+                        opacity: 0,
+                        duration: 1,
+                        ease: "power3.out"
+                    });
+                });
+
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <div className="relative pb-20">
+                    <Background3D />
+                    
+                    {/* Fixed Header */}
+                    <nav className="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5 bg-black/20">
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gradient-to-tr from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center font-bold text-black shadow-lg shadow-yellow-500/20">₿</div>
+                            <span className="font-display font-bold tracking-tight">BITCOIN <span className="font-light opacity-70">2050</span></span>
+                        </div>
+                        <div className="h-1 w-24 bg-gray-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-yellow-500 transition-all duration-300" style={{ width: `${scrollProgress * 100}%` }}></div>
+                        </div>
+                    </nav>
+
+                    {/* Hero Section */}
+                    <header className="min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20">
+                        <div className="glass-card px-6 py-2 rounded-full mb-8 animate-float inline-flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                            <span className="text-xs font-mono uppercase tracking-widest text-green-400">Interaktivní kurz v1.0</span>
+                        </div>
+                        
+                        <h1 className="text-5xl md:text-8xl font-bold mb-6 leading-tight">
+                            Peníze budoucnosti <br/>
+                            <span className="gradient-text">bez prostředníka.</span>
+                        </h1>
+                        
+                        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+                            Zapomeň na složité grafy. Bitcoin je protokol, který vrací moc lidem. 
+                            Pojď si vyzkoušet, jak to funguje uvnitř.
+                        </p>
+
+                        <div className="flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                            <span className="text-xs uppercase tracking-widest">Začni scrollovat</span>
+                            <Icon name="arrow-down" />
+                        </div>
+                    </header>
+
+                    <div className="max-w-4xl mx-auto px-6 space-y-40">
+                        
+                        {/* Section 1: The Problem */}
+                        <section className="reveal-section">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-blue-500/20 p-3 rounded-xl text-blue-400"><Icon name="building-2" /></div>
+                                <h2 className="text-3xl md:text-4xl font-bold">Problém: Důvěra</h2>
+                            </div>
+                            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+                                Dnešní peníze jsou jen čísla v databázi banky. Co když ta banka zkrachuje? 
+                                Co když vláda rozhodne, že ti peníze zmrazí? V centralizovaném systému stačí jeden bod selhání.
+                            </p>
+                            
+                            <CentralizationDemo />
+                        </section>
+
+                        {/* Section 2: The Wallet */}
+                        <section className="reveal-section">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-purple-500/20 p-3 rounded-xl text-purple-400"><Icon name="key" /></div>
+                                <h2 className="text-3xl md:text-4xl font-bold">Řešení: Vlastnictví</h2>
+                            </div>
+                            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+                                V Bitcoinu neexistuje "ztracené heslo", které ti obnoví podpora. 
+                                Tvoje peněženka je jen matematika. Ty jsi jediný majitel.
+                            </p>
+                            
+                            <WalletDemo />
+                        </section>
+
+                        {/* Section 3: Mining */}
+                        <section className="reveal-section">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-yellow-500/20 p-3 rounded-xl text-yellow-400"><Icon name="pickaxe" /></div>
+                                <h2 className="text-3xl md:text-4xl font-bold">Bezpečnost: Těžba</h2>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <p className="text-gray-300 text-lg mb-4 leading-relaxed">
+                                        Jak zajistit, aby nikdo nepodváděl, když není žádná centrální banka?
+                                    </p>
+                                    <p className="text-gray-400 mb-4">
+                                        Počítače po celém světě (těžaři) soutěží v řešení matematické hádanky. 
+                                        Ten, kdo ji vyřeší první, smí zapsat stránku do účetní knihy (Block).
+                                    </p>
+                                    <div className="bg-white/5 p-4 rounded-lg border-l-4 border-yellow-500">
+                                        <p className="text-sm italic text-gray-400">
+                                            "Je to jako digitální pečeť. Jakmile je blok zapečetěn, rozbít ho by stálo miliardy dolarů v elektřině."
+                                        </p>
+                                    </div>
+                                </div>
+                                <SimpleMiner onSuccess={() => {}} />
+                            </div>
+                        </section>
+
+                        {/* Section 4: Future */}
+                        <section className="reveal-section pb-40 text-center">
+                            <h2 className="text-4xl md:text-6xl font-bold mb-8">Vítej v budoucnosti</h2>
+                            <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12">
+                                Právě jsi pochopil základy protokolu, který může přežít staletí. 
+                                Bitcoin není jen o zbohatnutí. Je to o svobodě.
+                            </p>
+                            
+                            <div className="inline-block p-[1px] rounded-full bg-gradient-to-r from-yellow-400 to-purple-600">
+                                <button className="px-8 py-4 bg-black rounded-full hover:bg-white/10 transition-colors text-white font-bold flex items-center gap-2">
+                                    Začít skutečnou cestu <Icon name="arrow-right" size={18} />
+                                </button>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
