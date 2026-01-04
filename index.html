@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bay Street: Vstup do Matrixu</title>
+    <title>Bay Street: The Golden Ledger</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,30 +17,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <style>
-        /* --- VISUAL IDENTITY: BAY STREET VISION --- */
+        /* --- VISUAL IDENTITY: THE GOLD STANDARD --- */
         :root {
             /* The Void */
-            --color-bg: #0A0A0A; 
+            --color-bg: #000000; 
             
-            /* The Energy (Electric Cyan) */
-            --energy-primary: #06b6d4; /* Cyan-500 */
-            --energy-glow: #22d3ee;    /* Cyan-400 */
-            --energy-deep: #0891b2;    /* Cyan-600 */
+            /* The Wealth (Gold) */
+            --gold-primary: #D4AF37; /* Metallic Gold */
+            --gold-light: #FCD34D;   /* Bright Gold */
+            --gold-dark: #B4941F;    /* Deep Gold */
+            
+            /* The Earth (Brown/Bronze) */
+            --bronze-dark: #3E2723;
+            --bronze-light: #8D6E63;
 
             /* The Structure */
-            --structure-dark: #0f172a; /* Slate-900 */
-            --structure-glass: rgba(10, 15, 20, 0.75);
-            
-            /* Phase Accents (Subtle) */
-            --accent-gold: #fbbf24;
-            --accent-purple: #a855f7;
-            --accent-green: #4ade80;
+            --glass-border: rgba(212, 175, 55, 0.3);
+            --glass-bg: rgba(10, 5, 0, 0.85);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--color-bg);
-            color: #94a3b8; /* Light gray for body text to reduce eye strain */
+            color: #d4d4d8;
             overflow-x: hidden;
             font-size: 16px;
             font-weight: 400;
@@ -51,909 +50,574 @@
             font-family: 'Antonio', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #ffffff; /* Pure white for headings */
+            color: #ffffff;
         }
 
-        /* --- THE VOID (CANVAS LAYER) --- */
-        #matrix-canvas {
+        /* --- SCROLLYTELLING CANVAS LAYERS --- */
+        #story-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            background: radial-gradient(circle at center, #111827 0%, #000000 100%);
+            /* Subtle radial gradient background */
+            background: radial-gradient(circle at center, #1a1005 0%, #000000 100%);
         }
 
-        /* --- THE TECH (GLASSMORPHISM) --- */
+        /* --- THE TECH (GOLD GLASSMORPHISM) --- */
         .glass-panel {
-            background: var(--structure-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(6, 182, 212, 0.2); /* Cyan tint border */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 
+                        inset 0 0 0 1px rgba(212, 175, 55, 0.1);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .glass-panel:hover {
-            border-color: rgba(6, 182, 212, 0.5);
-            box-shadow: 0 0 30px rgba(6, 182, 212, 0.15),
-                        inset 0 0 0 1px rgba(6, 182, 212, 0.1);
-            transform: translateY(-2px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
         }
 
-        /* --- UI ELEMENTS --- */
-        .glow-text {
-            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+        /* --- TEXT EFFECTS --- */
+        .text-gold { color: var(--gold-primary); }
+        .text-gold-light { color: var(--gold-light); }
+        
+        .glow-gold {
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
         }
 
-        .btn-matrix {
-            position: relative;
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid var(--energy-primary);
-            color: var(--energy-glow);
+        /* --- INPUT CRYSTAL --- */
+        .crystal-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--gold-dark);
+            color: var(--gold-light);
             font-family: 'Antonio', sans-serif;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            overflow: hidden;
+            font-size: 3rem;
+            text-align: center;
+            outline: none;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .crystal-input:focus {
+            border-bottom-color: var(--gold-light);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
 
-        .btn-matrix::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.4), transparent);
-            transition: left 0.5s;
+        /* --- SCROLL SECTIONS --- */
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+            box-sizing: border-box;
         }
 
-        .btn-matrix:hover {
-            background: rgba(6, 182, 212, 0.2);
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
-            color: white;
-            text-shadow: 0 0 8px rgba(255,255,255,0.8);
+        .scroll-trigger {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
         }
-
-        .btn-matrix:hover::before {
-            left: 100%;
+        
+        .scroll-trigger.active {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        /* --- ANIMATIONS --- */
-        .fade-in { animation: fadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .blink { animation: blink 2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--energy-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--bronze-dark); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
 
-        /* Intro Specific */
-        #intro-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 100;
-            pointer-events: none; /* Let clicks pass to canvas initially */
+        .btn-gold {
+            background: linear-gradient(45deg, var(--bronze-dark), #000);
+            border: 1px solid var(--gold-dark);
+            color: var(--gold-primary);
+            padding: 1rem 2rem;
+            font-family: 'Antonio', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
         }
-        
-        .init-btn {
-            pointer-events: auto;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 1s ease;
-        }
-        
-        .show-init {
-            opacity: 1;
-            transform: scale(1);
+        .btn-gold:hover {
+            background: var(--gold-primary);
+            color: #000;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
         }
 
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative selection:bg-cyan-500 selection:text-black">
+<body class="antialiased selection:bg-yellow-900 selection:text-white">
 
-    <!-- The Void (Canvas) -->
-    <canvas id="matrix-canvas"></canvas>
+    <!-- The Canvas Layer (Background Animation) -->
+    <canvas id="story-canvas"></canvas>
 
-    <!-- Audio Ambience Visualizer (Simulated) -->
-    <div class="fixed bottom-6 right-6 flex gap-1 items-end h-6 z-50 opacity-50">
-        <div class="w-1 bg-cyan-500 animate-[pulse_1s_ease-in-out_infinite]" style="height: 40%"></div>
-        <div class="w-1 bg-cyan-500 animate-[pulse_1.5s_ease-in-out_infinite]" style="height: 80%"></div>
-        <div class="w-1 bg-cyan-500 animate-[pulse_1.2s_ease-in-out_infinite]" style="height: 60%"></div>
-        <div class="w-1 bg-cyan-500 animate-[pulse_0.8s_ease-in-out_infinite]" style="height: 30%"></div>
-    </div>
+    <!-- Navigation (Minimal) -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center pointer-events-none">
+        <div class="flex items-center gap-3 pointer-events-auto">
+            <i data-lucide="diamond" class="text-yellow-500 w-6 h-6"></i>
+            <span class="brand-font font-bold text-xl tracking-widest text-white">BAY STREET <span class="text-yellow-500">LEDGER</span></span>
+        </div>
+        <div class="text-xs font-mono text-yellow-600/50">SCROLL TO DISCOVER</div>
+    </nav>
 
-    <!-- Navigation -->
-    <nav id="main-nav" class="fixed top-0 w-full z-40 glass-panel border-b border-cyan-500/10 hide transition-all duration-700 transform -translate-y-full opacity-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="aperture" class="text-cyan-400 w-8 h-8 animate-[spin_10s_linear_infinite]"></i>
-                    <span class="brand-font font-bold text-2xl tracking-widest text-white">BAY STREET <span class="text-cyan-400 glow-text">NODE</span></span>
+    <!-- Progress Line -->
+    <div class="fixed left-0 top-0 h-1 bg-yellow-600 z-50 transition-all duration-100" id="scroll-progress" style="width: 0%"></div>
+
+
+    <!-- SECTION 1: THE PROBLEM (Bank Glitch) -->
+    <section id="section-intro" class="flex-col text-center relative z-10">
+        <div class="max-w-4xl mx-auto scroll-trigger active" data-index="0">
+            <h1 class="text-6xl md:text-9xl font-black mb-6 text-white drop-shadow-2xl">
+                ZROZENÍ <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500">PRAVDY</span>
+            </h1>
+            <p class="text-gray-400 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed mb-12">
+                Starý svět bankovek a razítek se hroutí. <br>
+                Data jsou křehká. Důvěra je zlomená.
+            </p>
+            <div class="animate-bounce mt-12 text-yellow-500/50">
+                <i data-lucide="chevron-down" class="w-10 h-10 mx-auto"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1.5: THE TRANSITION (Visual only scroll space) -->
+    <section id="section-transition" class="h-[150vh] relative z-10 pointer-events-none">
+        <!-- Just empty space to allow the canvas animation to play out -->
+        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center mix-blend-difference pointer-events-none opacity-0 transition-opacity duration-500" id="glitch-text">
+            <h2 class="text-8xl font-black text-red-500 tracking-tighter glitch-effect">SYSTEM FAILURE</h2>
+            <p class="text-red-400 font-mono mt-4">CENTRAL DATABASE CORRUPTED</p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: THE BLOCK (Solution) -->
+    <section id="section-block" class="flex-col text-center relative z-10">
+        <div class="glass-panel p-10 md:p-16 rounded-sm max-w-3xl scroll-trigger" data-index="1">
+            <h2 class="text-5xl font-bold mb-6 text-white">NOVÁ STRUKTURA</h2>
+            <p class="text-gray-300 text-lg leading-relaxed mb-8">
+                Z chaosu povstal <strong class="text-yellow-400">BLOK</strong>. 
+                Nezničitelná digitální schránka. Co se do ní jednou zapíše, zůstane tam navěky.
+                Už žádné mazání historie.
+            </p>
+            <div class="flex justify-center gap-8 text-yellow-600/50">
+                <div class="flex flex-col items-center">
+                    <i data-lucide="shield-check" class="w-8 h-8 mb-2"></i>
+                    <span class="text-xs uppercase tracking-widest">Secure</span>
                 </div>
-                <div class="hidden md:block">
-                    <div class="flex items-center space-x-1" id="nav-steps">
-                        <!-- Nav items injected via JS -->
-                    </div>
+                <div class="flex flex-col items-center">
+                    <i data-lucide="link" class="w-8 h-8 mb-2"></i>
+                    <span class="text-xs uppercase tracking-widest">Linked</span>
                 </div>
-                <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/5">
-                    <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_#22d3ee]"></div>
-                    <span class="text-[10px] text-cyan-200 font-mono tracking-widest">CONNECTED</span>
+                <div class="flex flex-col items-center">
+                    <i data-lucide="infinity" class="w-8 h-8 mb-2"></i>
+                    <span class="text-xs uppercase tracking-widest">Eternal</span>
                 </div>
             </div>
         </div>
-        <div class="h-[1px] w-full bg-gray-900">
-            <div id="progress-bar" class="h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-all duration-700" style="width: 0%"></div>
-        </div>
-    </nav>
+    </section>
 
-    <!-- Intro Interaction Layer -->
-    <div id="intro-overlay">
-        <button id="init-button" class="init-btn btn-matrix px-12 py-4 rounded-sm text-xl font-bold tracking-[0.2em] backdrop-blur-md" onclick="initializeMatrix()">
-            INITIALIZE SYSTEM
-        </button>
-        <p id="intro-hint" class="mt-4 text-cyan-500/50 font-mono text-xs tracking-widest uppercase blink init-btn">Waiting for signal...</p>
+    <!-- SECTION 3: HASHING (Generative Art) -->
+    <section id="section-hash" class="relative z-10 flex-col">
+        <div class="w-full max-w-4xl text-center scroll-trigger" data-index="2">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">KRYSTALIZACE DAT</h2>
+            <p class="text-gray-400 mb-12">Každé slovo vytváří unikátní geometrický otisk. Změň jediné písmeno a krystal se roztříští.</p>
+            
+            <div class="relative group">
+                <input type="text" id="hash-input" value="BAY STREET" class="crystal-input w-full bg-transparent mb-8 pb-4" autocomplete="off" spellcheck="false">
+                <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-yellow-600/30 text-xs font-mono uppercase tracking-widest pointer-events-none group-hover:text-yellow-500/50 transition-colors">
+                    Type your name
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+                <div class="glass-panel p-6 border-l-2 border-l-yellow-500">
+                    <h4 class="text-yellow-500 font-bold mb-2">INPUT</h4>
+                    <p class="text-xs text-gray-400 font-mono break-all" id="display-input">BAY STREET</p>
+                </div>
+                <div class="glass-panel p-6 border-l-2 border-l-white">
+                    <h4 class="text-white font-bold mb-2">SHA-256 (Simulace)</h4>
+                    <p class="text-xs text-gray-500 font-mono break-all" id="display-hash">...</p>
+                </div>
+                <div class="glass-panel p-6 border-l-2 border-l-yellow-900">
+                    <h4 class="text-yellow-700 font-bold mb-2">GEOMETRIE</h4>
+                    <p class="text-xs text-gray-400 font-mono">Vertices: <span id="display-vertices" class="text-white">0</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: THE FUTURE -->
+    <section id="section-future" class="relative z-10">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center scroll-trigger" data-index="3">
+            <div>
+                <h2 class="text-5xl md:text-7xl font-bold mb-8 text-white leading-tight">
+                    ZLATÝ <br><span class="text-yellow-500 glow-gold">STANDARD</span>
+                </h2>
+                <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                    Vítejte ve světě Webu 3.0. Zde se digitální vlastnictví stává hmatatelným. 
+                    Tokeny, NFT, Smart kontrakty - to nejsou jen kódy. Jsou to cihly nové ekonomiky.
+                </p>
+                <button onclick="location.reload()" class="btn-gold flex items-center gap-3 group">
+                    Restartovat Cestu <i data-lucide="refresh-ccw" class="w-5 h-5 group-hover:rotate-180 transition-transform duration-700"></i>
+                </button>
+            </div>
+            
+            <div class="glass-panel p-8 md:p-12 rotate-3 hover:rotate-0 transition-transform duration-700">
+                <div class="border border-yellow-500/20 p-6 relative">
+                    <div class="absolute -top-3 -left-3 bg-black border border-yellow-500 text-yellow-500 text-xs px-2 py-1 font-mono">SMART CONTRACT</div>
+                    <div class="font-mono text-xs text-gray-500 leading-loose">
+                        <span class="text-yellow-600">contract</span> Vault {<br>
+                        &nbsp;&nbsp;<span class="text-white">uint256</span> public goldBalance;<br>
+                        &nbsp;&nbsp;<span class="text-white">address</span> public owner;<br>
+                        <br>
+                        &nbsp;&nbsp;<span class="text-yellow-600">function</span> withdraw() public {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">require</span>(msg.sender == owner);<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;msg.sender.transfer(address(this).balance);<br>
+                        &nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-8 left-8 glass-panel p-4 border-l-4 border-yellow-500 transform translate-y-32 transition-transform duration-500 z-50 flex items-center gap-3">
+        <i data-lucide="info" class="text-yellow-500"></i>
+        <span id="toast-msg" class="text-sm text-white font-medium">System Ready.</span>
     </div>
 
-    <!-- Main Content -->
-    <main id="app-container" class="flex-grow flex items-center justify-center p-4 pt-24 min-h-screen opacity-0 transition-opacity duration-1000 z-10">
-        <!-- Dynamic Content -->
-    </main>
-
-    <!-- Notification HUD -->
-    <div id="toast" class="fixed bottom-10 left-10 glass-panel p-4 rounded-lg border-l-2 border-cyan-500 transform translate-y-40 transition-transform duration-500 z-50 flex items-center gap-4 max-w-sm shadow-[0_0_30px_rgba(0,0,0,0.8)]">
-        <div class="p-2 bg-cyan-500/10 rounded-md">
-            <i data-lucide="terminal" class="text-cyan-400 w-5 h-5"></i>
-        </div>
-        <div>
-            <h4 class="text-[10px] uppercase text-gray-500 font-bold tracking-widest mb-0.5">Console Output</h4>
-            <span id="toast-msg" class="text-sm font-medium text-cyan-100 block leading-tight font-mono">System Ready.</span>
-        </div>
-    </div>
-    
     <script>
-        // --- MATRIX CANVAS ENGINE ---
-        const canvas = document.getElementById('matrix-canvas');
+        // --- CONFIGURATION ---
+        const PARTICLE_COLOR = '#D4AF37'; // Gold
+        const PARTICLE_SIZE = 2;
+        
+        // --- CANVAS SETUP ---
+        const canvas = document.getElementById('story-canvas');
         const ctx = canvas.getContext('2d');
-        
         let width, height;
-        let particles = [];
-        let mouse = { x: 0, y: 0 };
-        let isInitialized = false;
-        
-        // Configuration
-        const PARTICLE_COUNT = 150; // More particles for the network
-        const CONNECT_DISTANCE = 120;
         
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
+            // Center calculation needs update on resize
+            centerX = width / 2;
+            centerY = height / 2;
         }
         window.addEventListener('resize', resize);
-        resize();
-
+        
+        // --- STATE & SCROLL LOGIC ---
+        let scrollY = 0;
+        let scrollProgress = 0; // 0 to 1 based on page height
+        let centerX, centerY;
+        
+        // --- PARTICLE SYSTEM (BANK -> BLOCK) ---
         class Particle {
-            constructor() {
-                this.x = width / 2; // Start at center (Singularity)
-                this.y = height / 2;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 2;
-                this.size = Math.random() * 2 + 1;
-                this.color = `rgba(6, 182, 212, ${Math.random() * 0.5 + 0.2})`; // Cyan opacity
+            constructor(x, y, destX, destY) {
+                // Bank State (Icon shape roughly)
+                this.bankX = x;
+                this.bankY = y;
                 
-                // Singularity state variables
-                this.angle = Math.random() * Math.PI * 2;
-                this.radius = Math.random() * 50; // Cluster radius
-                this.speed = Math.random() * 0.02 + 0.005;
+                // Block State (Perfect Cube/Grid)
+                this.blockX = destX;
+                this.blockY = destY;
+                
+                // Current State
+                this.x = x;
+                this.y = y;
+                
+                // Glitch factors
+                this.noiseX = (Math.random() - 0.5) * 50;
+                this.noiseY = (Math.random() - 0.5) * 50;
+                this.speed = Math.random() * 0.05 + 0.02;
+                
+                this.size = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.5 + 0.3;
             }
 
-            update() {
-                if (!isInitialized) {
-                    // SINGULARITY MODE: Orbit around center/mouse
-                    this.angle += this.speed;
-                    const targetX = width/2 + Math.cos(this.angle) * this.radius;
-                    const targetY = height/2 + Math.sin(this.angle) * this.radius;
-                    
-                    // Mouse interaction (Orbit distortion)
-                    const dx = mouse.x - width/2;
-                    const dy = mouse.y - height/2;
-                    
-                    this.x += (targetX + dx*0.1 - this.x) * 0.05;
-                    this.y += (targetY + dy*0.1 - this.y) * 0.05;
-
+            update(progress, time) {
+                // Progress 0.0 - 0.3: Bank State
+                // Progress 0.3 - 0.6: Explosion/Glitch
+                // Progress 0.6 - 1.0: Block State
+                
+                let targetX, targetY;
+                
+                if (progress < 0.4) {
+                    // Bank State
+                    targetX = this.bankX;
+                    targetY = this.bankY;
                 } else {
-                    // NETWORK MODE: Float freely
-                    this.x += this.vx;
-                    this.y += this.vy;
-
-                    // Mouse Interaction (Repel/Attract)
-                    const dx = this.x - mouse.x;
-                    const dy = this.y - mouse.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 200) {
-                        const forceDirectionX = dx / dist;
-                        const forceDirectionY = dy / dist;
-                        const force = (200 - dist) / 200;
-                        this.vx += forceDirectionX * force * 0.05;
-                        this.vy += forceDirectionY * force * 0.05;
-                    }
-
-                    // Bounce off walls
-                    if (this.x < 0 || this.x > width) this.vx *= -1;
-                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                    // Block State
+                    targetX = this.blockX;
+                    targetY = this.blockY;
                 }
+
+                // GLITCH EFFECT in transition (0.3 to 0.7)
+                let glitchIntensity = 0;
+                if (progress > 0.2 && progress < 0.8) {
+                    // Parabola peak at 0.5
+                    glitchIntensity = 1 - Math.pow((progress - 0.5) * 4, 2); 
+                    if(glitchIntensity < 0) glitchIntensity = 0;
+                }
+
+                // Glitch Text Trigger
+                const glitchText = document.getElementById('glitch-text');
+                if (glitchIntensity > 0.8) {
+                    glitchText.style.opacity = Math.random() > 0.5 ? '1' : '0.5';
+                    glitchText.style.transform = `translate(-50%, -50%) skew(${Math.random()*20-10}deg)`;
+                } else {
+                    glitchText.style.opacity = '0';
+                }
+
+                // Interpolation
+                const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
+                
+                this.x = lerp(this.x, targetX, 0.08);
+                this.y = lerp(this.y, targetY, 0.08);
+
+                // Add Glitch Noise
+                this.x += (Math.random() - 0.5) * glitchIntensity * 100;
+                this.y += (Math.random() - 0.5) * glitchIntensity * 100;
             }
 
             draw() {
+                ctx.fillStyle = `rgba(212, 175, 55, ${this.alpha})`;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
+                ctx.rect(this.x, this.y, this.size, this.size);
                 ctx.fill();
             }
         }
 
+        let particles = [];
+
         function initParticles() {
             particles = [];
-            for (let i = 0; i < PARTICLE_COUNT; i++) {
-                particles.push(new Particle());
-            }
-        }
+            resize(); // Ensure center is correct
+            
+            const rows = 20;
+            const cols = 20;
+            const gap = 15;
+            
+            // Define Block Shape (Grid)
+            const blockOffsetX = centerX - (cols * gap) / 2;
+            const blockOffsetY = centerY - (rows * gap) / 2;
 
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.fillStyle = isInitialized ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.2)'; // Trails
-            ctx.fillRect(0, 0, width, height);
-
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
-            // Draw connections only if initialized
-            if (isInitialized) {
-                connectParticles();
-            } else {
-                // Draw connecting lines to mouse in singularity mode to simulate "code trails"
-                ctx.strokeStyle = 'rgba(6, 182, 212, 0.05)';
-                ctx.beginPath();
-                ctx.moveTo(width/2, height/2);
-                ctx.lineTo(mouse.x, mouse.y);
-                ctx.stroke();
-            }
-        }
-
-        function connectParticles() {
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < CONNECT_DISTANCE) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(6, 182, 212, ${1 - dist / CONNECT_DISTANCE})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
+            // Define Bank Shape (Pillar Icon)
+            // Top triangle (roof) + Rect body
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    // Block Coords
+                    const bX = blockOffsetX + j * gap;
+                    const bY = blockOffsetY + i * gap;
+                    
+                    // Bank Coords (Simulated)
+                    let bankX, bankY;
+                    
+                    // Roof
+                    if (i < 6) {
+                        const rowWidth = i * 2 + 2;
+                        const startJ = (cols - rowWidth) / 2;
+                        if (j >= startJ && j < startJ + rowWidth) {
+                             bankX = centerX + (j - cols/2) * gap;
+                             bankY = centerY - 150 + i * gap;
+                        } else {
+                            // Debris for unused particles in bank mode
+                            bankX = (Math.random() * width);
+                            bankY = (Math.random() * height); 
+                        }
+                    } 
+                    // Pillars
+                    else if (i >= 6 && i < 16) {
+                        if (j % 4 === 1 || j % 4 === 2) {
+                            bankX = centerX + (j - cols/2) * gap;
+                            bankY = centerY - 150 + i * gap;
+                        } else {
+                            bankX = (Math.random() * width);
+                            bankY = height + Math.random() * 100;
+                        }
                     }
+                    // Base
+                    else {
+                        if (j > 2 && j < cols - 2) {
+                            bankX = centerX + (j - cols/2) * gap;
+                            bankY = centerY - 150 + i * gap;
+                        } else {
+                            bankX = Math.random() * width;
+                            bankY = height + 100;
+                        }
+                    }
+
+                    // Push Particle
+                    particles.push(new Particle(bankX, bankY, bX, bY));
                 }
             }
         }
 
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            
-            // Show Init button only if user interacts
-            if (!isInitialized) {
-                document.getElementById('init-button').classList.add('show-init');
-                document.getElementById('intro-hint').classList.add('show-init');
-            }
-        });
-
-        // Start Canvas
-        initParticles();
-        animate();
-
-
-        // --- APP LOGIC ---
-
-        function initializeMatrix() {
-            isInitialized = true;
-            
-            // 1. Explode Particles
-            particles.forEach(p => {
-                p.vx = (Math.random() - 0.5) * 5; // Fast explosion
-                p.vy = (Math.random() - 0.5) * 5;
-            });
-
-            // 2. Hide Intro UI
-            const intro = document.getElementById('intro-overlay');
-            intro.style.opacity = '0';
-            setTimeout(() => intro.style.display = 'none', 1000);
-
-            // 3. Show Main UI
-            const nav = document.getElementById('main-nav');
-            const app = document.getElementById('app-container');
-            
-            nav.classList.remove('hide', '-translate-y-full', 'opacity-0');
-            nav.classList.add('translate-y-0', 'opacity-100');
-            
-            app.classList.remove('opacity-0');
-            app.classList.add('opacity-100');
-
-            // 4. Start App Flow
-            initApp();
-            showToast('NEURAL INTERFACE CONNECTED...', 'info');
-        }
-
-        // --- CONTENT STATE ---
-        const STATE = {
-            currentPhase: 0,
-            phases: [
-                { id: 'decentralization', title: '1. Síť', color: 'cyan' },
-                { id: 'blockchain', title: '2. Deník', color: 'gold' },
-                { id: 'consensus', title: '3. Shoda', color: 'blue' },
-                { id: 'smartcontracts', title: '4. Automat', color: 'purple' },
-                { id: 'web3', title: '5. Majetek', color: 'green' }
-            ],
-            blocks: [
-                { id: 1, data: 'Karel -> Jana: 50 coinů', hash: '', prevHash: '00000000' },
-                { id: 2, data: 'Jana -> Petr: 20 coinů', hash: '', prevHash: '' },
-                { id: 3, data: 'Petr -> Item: Meč', hash: '', prevHash: '' }
-            ],
-            miningCount: 0
+        // --- CRYSTAL HASHING LOGIC ---
+        let crystalState = {
+            seed: 0,
+            text: "BAY STREET",
+            color: '#D4AF37'
         };
 
-        const $ = (s) => document.querySelector(s);
-        const $$ = (s) => document.querySelectorAll(s);
-
-        function showToast(msg, type = 'info') {
-            const toast = $('#toast');
-            const msgEl = $('#toast-msg');
-            const icon = toast.querySelector('i');
+        function drawCrystal() {
+            const time = Date.now() * 0.001;
+            const inputSection = document.getElementById('section-hash').getBoundingClientRect();
             
-            msgEl.innerText = msg;
-            toast.classList.remove('translate-y-40');
-            
-            // Visual feedback
-            let color = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-green-400' : 'text-cyan-400');
-            icon.className = `${color} w-5 h-5`;
-            
-            if (type === 'error') toast.classList.replace('border-cyan-500', 'border-red-500');
-            else toast.classList.replace('border-red-500', 'border-cyan-500');
+            // Only draw if section is visible
+            if (inputSection.top > window.innerHeight || inputSection.bottom < 0) return;
 
-            setTimeout(() => toast.classList.add('translate-y-40'), 4000);
-        }
-
-        function simpleHash(str) {
-            let hash = 0;
-            if (str.length === 0) return "00000000";
-            for (let i = 0; i < str.length; i++) {
-                hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                hash = hash & hash;
+            // Simple Hash simulation for visuals
+            let hashVal = 0;
+            for(let i=0; i<crystalState.text.length; i++) {
+                hashVal = (hashVal << 5) - hashVal + crystalState.text.charCodeAt(i);
+                hashVal |= 0;
             }
-            return Math.abs(hash).toString(16).padStart(8, '0');
-        }
-
-        function initApp() { renderPhase(0); }
-
-        function setPhase(index) {
-            STATE.currentPhase = index;
-            renderPhase(index);
-        }
-
-        function nextPhase() {
-            if (STATE.currentPhase < STATE.phases.length - 1) {
-                setPhase(STATE.currentPhase + 1);
-            }
-        }
-
-        function updateNav() {
-            const list = $('#nav-steps');
-            const progressBar = $('#progress-bar');
+            const absHash = Math.abs(hashVal);
             
-            list.innerHTML = '';
+            // Setup geometry
+            const numPoints = 3 + (absHash % 10); // 3 to 12 points
+            const radius = 100 + (absHash % 50);
             
-            STATE.phases.forEach((phase, idx) => {
-                const active = idx === STATE.currentPhase;
-                const completed = idx < STATE.currentPhase;
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.rotate(time * (0.2 + (absHash % 10)/50)); // Rotation speed based on hash
+            
+            ctx.beginPath();
+            ctx.strokeStyle = crystalState.color;
+            ctx.lineWidth = 2;
+            
+            for(let i=0; i <= numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI * 2;
+                // Spikiness determined by char codes
+                const mod = (i % 2 === 0) ? 1 : 0.5 + ((absHash % 100)/200);
+                const r = radius * mod;
                 
-                const btn = document.createElement('button');
-                btn.className = `px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all duration-300 ${active ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]' : 'text-gray-600 hover:text-gray-300'}`;
-                btn.innerText = phase.title.split('. ')[1];
-                btn.onclick = () => setPhase(idx);
-                list.appendChild(btn);
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
+                
+                if(i===0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            
+            ctx.closePath();
+            
+            // Glow effect
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = crystalState.color;
+            ctx.stroke();
+            
+            // Inner lines
+            ctx.beginPath();
+            ctx.lineWidth = 0.5;
+            ctx.globalAlpha = 0.5;
+            for(let i=0; i <= numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI * 2;
+                ctx.lineTo(0,0);
+                const x = Math.cos(angle) * radius * ((i%2===0)?1:0.5);
+                const y = Math.sin(angle) * radius * ((i%2===0)?1:0.5);
+                ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        // --- MAIN RENDER LOOP ---
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // 1. Calculate Scroll Physics
+            const transitionSection = document.getElementById('section-transition');
+            const transRect = transitionSection.getBoundingClientRect();
+            const winH = window.innerHeight;
+            
+            // Map scroll to 0-1 for the transition phase
+            // Start changing when Section 1 leaves, finish when Section 2 arrives
+            let transProgress = (winH - transRect.top) / (transRect.height + winH);
+            transProgress = Math.max(0, Math.min(1, transProgress));
+            
+            // 2. Draw Particles (Bank -> Block)
+            // Fade out when crystal section appears
+            const hashSection = document.getElementById('section-hash').getBoundingClientRect();
+            let globalAlpha = 1;
+            if (hashSection.top < winH) {
+                globalAlpha = Math.max(0, hashSection.top / winH);
+            }
+            
+            ctx.save();
+            ctx.globalAlpha = globalAlpha;
+            particles.forEach(p => {
+                p.update(transProgress, Date.now());
+                p.draw();
             });
+            ctx.restore();
 
-            const progress = ((STATE.currentPhase) / (STATE.phases.length - 1)) * 100;
-            progressBar.style.width = `${progress}%`;
-            
-            lucide.createIcons();
+            // 3. Draw Crystal
+            if (globalAlpha < 0.1) {
+                drawCrystal();
+            }
+
+            requestAnimationFrame(animate);
         }
 
-        function renderPhase(index) {
-            const app = $('#app-container');
-            const phase = STATE.phases[index];
+        // --- EVENT LISTENERS ---
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (scrollY / docHeight) * 100;
+            document.getElementById('scroll-progress').style.width = `${scrolled}%`;
             
-            updateNav();
-            app.innerHTML = '';
-            
-            let html = '';
-
-            // --- PHASE 1: SÍŤ ---
-            if (phase.id === 'decentralization') {
-                html = `
-                    <div class="w-full max-w-6xl fade-in">
-                        <header class="mb-12 border-l-4 border-cyan-500 pl-6">
-                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">ARCHITEKTURA <span class="text-cyan-400 glow-text">SÍTĚ</span></h2>
-                            <p class="text-xl text-gray-400 font-light">Centralizovaná Fragilita vs. Distribuovaná Odolnost</p>
-                        </header>
-
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- Old World -->
-                            <div class="glass-panel p-8 rounded-sm group cursor-pointer hover:border-red-500/50 transition-colors" onclick="hackCentral()">
-                                <div class="flex justify-between items-start mb-8">
-                                    <div>
-                                        <h3 class="text-2xl text-white mb-1">LEGACY SYSTEM</h3>
-                                        <span class="text-xs font-mono text-red-500/80 tracking-widest uppercase">Centralizované</span>
-                                    </div>
-                                    <i data-lucide="server-off" class="text-gray-600 group-hover:text-red-500 w-8 h-8 transition-colors"></i>
-                                </div>
-                                
-                                <div id="central-network" class="h-64 bg-black/40 border border-white/5 relative flex items-center justify-center overflow-hidden">
-                                    <div class="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                                    <!-- Center Node -->
-                                    <div id="central-core" class="w-16 h-16 bg-gray-800 border border-gray-600 flex items-center justify-center z-10 transition-all duration-300 shadow-2xl">
-                                        <i data-lucide="database" class="text-gray-400 w-6 h-6"></i>
-                                    </div>
-                                    <!-- Connections -->
-                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <div class="w-full h-[1px] bg-gray-800 absolute top-1/2"></div>
-                                        <div class="h-full w-[1px] bg-gray-800 absolute left-1/2"></div>
-                                    </div>
-                                    <div class="absolute bottom-4 text-[10px] text-gray-600 font-mono tracking-widest uppercase group-hover:text-red-500 transition-colors">Click to attack Mainframe</div>
-                                </div>
-                            </div>
-
-                            <!-- New World -->
-                            <div class="glass-panel p-8 rounded-sm group border-cyan-500/30">
-                                <div class="flex justify-between items-start mb-8">
-                                    <div>
-                                        <h3 class="text-2xl text-white mb-1">DISTRIBUTED LEDGER</h3>
-                                        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Decentralizované</span>
-                                    </div>
-                                    <i data-lucide="share-2" class="text-cyan-500 w-8 h-8"></i>
-                                </div>
-                                
-                                <div class="h-64 bg-black/40 border border-cyan-500/10 relative p-8" id="mesh-grid">
-                                    <!-- Nodes via JS -->
-                                    <div class="grid grid-cols-3 gap-8 h-full items-center justify-items-center">
-                                        ${[...Array(6)].map((_,i) => `
-                                            <div onclick="hackNode(this)" class="w-10 h-10 bg-cyan-900/20 border border-cyan-500/50 rounded-full flex items-center justify-center cursor-pointer hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_#06b6d4] transition-all duration-300 mesh-node relative">
-                                                <i data-lucide="network" class="w-4 h-4 text-cyan-400 pointer-events-none"></i>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                                <div class="text-right mt-4 text-[10px] text-cyan-500/50 font-mono tracking-widest">NODES ACTIVE: 6/6</div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-12 flex justify-end">
-                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
-                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // --- PHASE 2: BLOCKCHAIN ---
-            else if (phase.id === 'blockchain') {
-                html = `
-                    <div class="w-full max-w-6xl fade-in">
-                        <header class="mb-12 border-l-4 border-yellow-500 pl-6">
-                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">IMMUTABLE <span class="text-yellow-400 glow-text">LEDGER</span></h2>
-                            <p class="text-xl text-gray-400 font-light">Princip nezměnitelnosti dat pomocí kryptografických hashů.</p>
-                        </header>
-
-                        <div class="flex flex-col md:flex-row gap-6 overflow-x-auto pb-8 justify-center px-2">
-                             ${STATE.blocks.map((block, idx) => `
-                                <div id="block-${idx}" class="glass-panel p-6 w-full md:w-96 flex-shrink-0 relative group transition-all duration-500 hover:bg-white/5 border-t-2 ${idx===0 ? 'border-yellow-500' : 'border-gray-700'}">
-                                    <div class="flex justify-between items-center mb-6 opacity-70">
-                                        <span class="font-mono text-xs text-gray-400 tracking-widest">BLOCK_ID: 00${block.id}</span>
-                                        ${idx===0 ? '<span class="text-[10px] bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">GENESIS</span>' : ''}
-                                    </div>
-                                    
-                                    <div class="space-y-6">
-                                        <div class="relative group/input">
-                                            <label class="text-[10px] uppercase text-cyan-500 tracking-widest mb-2 block">Data Payload</label>
-                                            <textarea oninput="updateBlockData(${idx}, this.value)" class="w-full bg-black/50 border border-gray-700 p-4 text-sm text-gray-300 font-mono focus:border-cyan-500 focus:outline-none focus:text-cyan-400 transition-colors h-24 resize-none block-input">${block.data}</textarea>
-                                            <div class="absolute bottom-2 right-2 opacity-0 group-hover/input:opacity-100 transition-opacity">
-                                                <i data-lucide="edit-3" class="w-3 h-3 text-gray-500"></i>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="grid grid-cols-1 gap-2">
-                                            <div class="bg-black/30 p-2 border border-white/5 flex justify-between items-center">
-                                                <span class="text-[10px] text-gray-600 uppercase">Prev</span>
-                                                <span id="prev-${idx}" class="font-mono text-xs text-gray-500 truncate w-32 text-right">${block.prevHash}</span>
-                                            </div>
-                                            <div class="bg-black/30 p-2 border border-white/5 flex justify-between items-center relative overflow-hidden">
-                                                <span class="text-[10px] text-gray-600 uppercase">Hash</span>
-                                                <span id="hash-${idx}" class="font-mono text-xs text-yellow-500 truncate w-32 text-right font-bold relative z-10">...</span>
-                                                <div class="absolute inset-0 bg-yellow-500/5"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    ${idx < STATE.blocks.length - 1 ? '<div class="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-gray-700"><i data-lucide="link" class="w-6 h-6"></i></div>' : ''}
-                                </div>
-                             `).join('')}
-                        </div>
-
-                        <div class="flex justify-center gap-6 mt-8">
-                             <button onclick="cheatBlock()" class="px-6 py-3 border border-red-900/50 hover:bg-red-900/20 text-red-400 text-sm font-bold uppercase tracking-widest transition-all">
-                                Simulate Attack
-                            </button>
-                             <button onclick="repairChain()" class="px-6 py-3 border border-green-900/50 hover:bg-green-900/20 text-green-400 text-sm font-bold uppercase tracking-widest transition-all">
-                                Resync Nodes
-                            </button>
-                        </div>
-                        
-                        <div class="mt-12 flex justify-end">
-                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
-                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                setTimeout(updateAllHashesDisplay, 100);
-            }
-            
-            // --- PHASE 3: CONSENSUS ---
-            else if (phase.id === 'consensus') {
-                html = `
-                    <div class="w-full max-w-5xl fade-in">
-                        <header class="mb-12 border-l-4 border-blue-500 pl-6">
-                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">NETWORK <span class="text-blue-400 glow-text">CONSENSUS</span></h2>
-                            <p class="text-xl text-gray-400 font-light">Algoritmy shody v distribuovaném prostředí.</p>
-                        </header>
-
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- PoW -->
-                            <div class="glass-panel p-8 relative overflow-hidden group">
-                                <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <div class="flex items-center gap-4 mb-6 relative z-10">
-                                    <div class="p-3 bg-yellow-500/10 rounded-full border border-yellow-500/20">
-                                        <i data-lucide="cpu" class="w-6 h-6 text-yellow-500"></i>
-                                    </div>
-                                    <h3 class="text-2xl text-white font-bold">PROOF OF WORK</h3>
-                                </div>
-                                <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
-                                    Soutěž výpočetním výkonem. Těžaři hledají "nonce", aby validovali blok. Bezpečné, ale energeticky náročné.
-                                </p>
-                                
-                                <div class="bg-black/40 p-6 border border-white/5 relative z-10">
-                                    <div class="h-2 bg-gray-800 rounded-full overflow-hidden mb-4">
-                                        <div id="mining-bar" class="h-full bg-yellow-500 w-0 transition-all duration-75"></div>
-                                    </div>
-                                    <button onclick="mineClick()" class="w-full py-4 border border-yellow-500/30 hover:bg-yellow-500/10 text-yellow-500 font-mono text-sm uppercase tracking-widest transition-all">
-                                        INITIALIZE HASHING
-                                    </button>
-                                    <div id="mine-status" class="mt-2 text-[10px] font-mono text-gray-600 h-4">IDLE_STATE</div>
-                                </div>
-                            </div>
-
-                            <!-- PoS -->
-                            <div class="glass-panel p-8 relative overflow-hidden group">
-                                <div class="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <div class="flex items-center gap-4 mb-6 relative z-10">
-                                    <div class="p-3 bg-blue-500/10 rounded-full border border-blue-500/20">
-                                        <i data-lucide="scale" class="w-6 h-6 text-blue-500"></i>
-                                    </div>
-                                    <h3 class="text-2xl text-white font-bold">PROOF OF STAKE</h3>
-                                </div>
-                                <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
-                                    Validátoři jsou vybráni na základě uzamčeného kapitálu (Stake). Ekonomická bezpečnost místo fyzické energie.
-                                </p>
-                                
-                                <div class="bg-black/40 p-6 border border-white/5 relative z-10">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="text-[10px] text-gray-500 uppercase tracking-widest">Staked Amount</span>
-                                        <span id="stake-val" class="font-mono text-blue-400">0 ETH</span>
-                                    </div>
-                                    <input type="range" min="0" max="100" value="0" class="w-full h-1 bg-gray-800 appearance-none cursor-pointer accent-blue-500 mb-6" oninput="updateStake(this.value)">
-                                    
-                                    <div class="flex justify-between items-end border-t border-white/5 pt-4">
-                                        <span class="text-[10px] text-gray-500 uppercase">Probability</span>
-                                        <span id="win-chance" class="text-2xl font-mono text-white">0%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-12 flex justify-end">
-                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
-                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // --- PHASE 4: SMART CONTRACTS ---
-            else if (phase.id === 'smartcontracts') {
-                html = `
-                    <div class="w-full max-w-5xl fade-in">
-                        <header class="mb-12 border-l-4 border-purple-500 pl-6">
-                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">SMART <span class="text-purple-400 glow-text">CONTRACTS</span></h2>
-                            <p class="text-xl text-gray-400 font-light">Deterministický kód. "If This, Then That" na blockchainu.</p>
-                        </header>
-
-                        <div class="glass-panel p-8 border-purple-500/20 relative overflow-hidden">
-                            <div class="grid md:grid-cols-3 gap-8">
-                                <!-- Code Logic -->
-                                <div class="col-span-1 space-y-4 z-10">
-                                    <div class="bg-black/60 p-4 border border-purple-500/20 font-mono text-xs text-gray-400 leading-loose">
-                                        <span class="text-purple-400">function</span> execute() {<br>
-                                        &nbsp;&nbsp;<span class="text-blue-400">if</span> (oracle.rain) {<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;transfer(100);<br>
-                                        &nbsp;&nbsp;}<br>
-                                        }
-                                    </div>
-                                    <button onclick="triggerContract()" class="w-full py-4 bg-purple-600/20 hover:bg-purple-600 text-white font-bold tracking-widest uppercase transition-all border border-purple-500/50 flex items-center justify-center gap-2">
-                                        <i data-lucide="play" class="w-4 h-4"></i> Execute
-                                    </button>
-                                </div>
-
-                                <!-- Visualizer -->
-                                <div class="col-span-2 bg-gray-900/50 border border-white/5 relative h-64 overflow-hidden" id="contract-scene">
-                                    <div class="absolute inset-0 grid grid-cols-3 items-center text-center z-20">
-                                        <div>
-                                            <i data-lucide="cloud" class="w-12 h-12 text-gray-600 mx-auto mb-2 transition-colors" id="icon-cloud"></i>
-                                            <span class="text-[10px] uppercase tracking-widest text-gray-600">Oracle Data</span>
-                                        </div>
-                                        <div class="relative">
-                                            <div class="h-[2px] w-full bg-gray-800"></div>
-                                            <div id="flow-signal" class="absolute top-0 left-0 h-[2px] w-0 bg-purple-500 transition-all duration-1000"></div>
-                                        </div>
-                                        <div>
-                                            <i data-lucide="wallet" class="w-12 h-12 text-gray-600 mx-auto mb-2 transition-colors" id="icon-wallet"></i>
-                                            <span class="text-[10px] uppercase tracking-widest text-gray-600">User Wallet</span>
-                                            <div id="wallet-balance" class="opacity-0 text-green-400 font-mono font-bold mt-1">+100 CR</div>
-                                        </div>
-                                    </div>
-                                    <!-- Rain Layer -->
-                                    <div id="rain-layer" class="absolute inset-0 pointer-events-none z-10"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-12 flex justify-end">
-                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
-                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // --- PHASE 5: ASSETS ---
-            else if (phase.id === 'web3') {
-                html = `
-                    <div class="w-full max-w-5xl fade-in">
-                        <header class="mb-12 border-l-4 border-green-500 pl-6">
-                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">DIGITAL <span class="text-green-400 glow-text">ASSETS</span></h2>
-                            <p class="text-xl text-gray-400 font-light">Tokenizace a suverénní vlastnictví.</p>
-                        </header>
-
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- NFT -->
-                            <div class="glass-panel p-8 text-center border-green-500/20 hover:border-green-500/50 transition-colors">
-                                <div class="w-48 h-48 mx-auto bg-gradient-to-t from-gray-900 to-black border border-green-500/30 mb-6 flex items-center justify-center relative group">
-                                    <div class="absolute inset-0 bg-green-500/5 animate-pulse"></div>
-                                    <i data-lucide="box" class="w-20 h-20 text-green-500 group-hover:scale-110 transition-transform duration-500"></i>
-                                </div>
-                                <h3 class="text-2xl text-white font-bold mb-1">NFT STANDARD</h3>
-                                <p class="text-xs text-gray-500 font-mono mb-4">ERC-721 / UNIQUE ASSET</p>
-                                <p class="text-gray-400 text-sm leading-relaxed">
-                                    Digitální certifikát vlastnictví. Kód, který říká "toto je originál a patří této adrese".
-                                </p>
-                            </div>
-
-                            <!-- DeFi -->
-                            <div class="glass-panel p-8 flex flex-col justify-center border-green-500/20">
-                                <div class="flex items-center gap-3 mb-6">
-                                    <i data-lucide="trending-up" class="text-green-400 w-6 h-6"></i>
-                                    <h3 class="text-2xl text-white font-bold">DECENTRALIZED FINANCE</h3>
-                                </div>
-                                <div class="bg-black/50 p-6 border border-white/5 mb-6">
-                                    <div class="flex justify-between text-[10px] text-gray-500 uppercase tracking-widest mb-4">
-                                        <span>Liquidity Pool</span>
-                                        <span>APY: <span class="text-green-400">12%</span></span>
-                                    </div>
-                                    <input type="range" min="0" max="100" value="0" class="w-full h-1 bg-gray-800 appearance-none cursor-pointer accent-green-500 mb-6" oninput="updateYield(this.value)">
-                                    <div class="text-center">
-                                        <div class="text-4xl font-mono text-white tracking-tighter" id="yield-display">0.00</div>
-                                        <div class="text-xs text-gray-600 mt-1 uppercase">Earned Tokens</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-16 text-center">
-                            <button onclick="location.reload()" class="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
-                                Re-Initialize System
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            app.innerHTML = html;
-            lucide.createIcons();
-        }
-
-        // --- INTERACTION LOGIC ---
-
-        function hackCentral() {
-            const core = $('#central-core');
-            const container = $('#central-network');
-            
-            core.classList.remove('bg-gray-800');
-            core.classList.add('bg-red-600', 'animate-pulse');
-            container.style.borderColor = 'rgba(220, 38, 38, 0.5)';
-            
-            showToast('SYSTEM FAILURE: CENTRAL NODE COMPROMISED', 'error');
-        }
-
-        function hackNode(el) {
-            if(el.classList.contains('bg-red-500')) return;
-            el.classList.replace('bg-cyan-900/20', 'bg-red-500');
-            el.classList.add('scale-90');
-            
-            // Pulse others
-            $$('.mesh-node').forEach(n => {
-                if(n !== el && !n.classList.contains('bg-red-500')) {
-                    n.classList.add('bg-green-500', 'scale-110');
-                    setTimeout(() => n.classList.remove('bg-green-500', 'scale-110'), 300);
+            // Reveal text triggers
+            const triggers = document.querySelectorAll('.scroll-trigger');
+            triggers.forEach(t => {
+                const rect = t.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.8) {
+                    t.classList.add('active');
                 }
             });
-            showToast('REROUTING TRAFFIC... NETWORK STABLE', 'info');
-        }
+        });
 
-        // Blockchain Logic
-        function updateBlockData(idx, val) {
-            STATE.blocks[idx].data = val;
-            recalcHashes();
-            updateUIHashes();
-            checkChain();
-        }
-
-        function recalcHashes() {
-            let prev = "00000000";
-            STATE.blocks.forEach(b => {
-                b.prevHash = prev;
-                b.hash = simpleHash(b.id + b.prevHash + b.data);
-                prev = b.hash;
-            });
-        }
-
-        function updateUIHashes() {
-            STATE.blocks.forEach((b, i) => {
-                const h = $(`#hash-${i}`);
-                if(h) h.innerText = b.hash;
-                if(i < STATE.blocks.length - 1) {
-                    const p = $(`#prev-${i+1}`);
-                    if(p) p.innerText = b.hash;
-                }
-            });
-        }
-
-        function checkChain() {
-            const valid = STATE.blocks[0].data.includes('50 coinů');
-            $$('[id^="block-"]').forEach((el, i) => {
-                if (i > 0) {
-                    if (!valid) el.classList.add('border-red-500');
-                    else el.classList.remove('border-red-500');
-                }
-            });
-            if (!valid) showToast('CHAIN INVALID: HASH MISMATCH DETECTED', 'error');
-        }
-        
-        function cheatBlock() {
-            const ta = $('textarea');
-            if(ta) { ta.value = "HACK: 99999 coins"; updateBlockData(0, ta.value); }
-        }
-        
-        function repairChain() {
-            STATE.blocks[0].data = "Karel -> Jana: 50 coinů";
-            updateBlockData(0, STATE.blocks[0].data);
-            $('textarea').value = STATE.blocks[0].data;
-            showToast('LEDGER RESYNCED. INTEGRITY RESTORED.', 'info');
-        }
-
-        // Consensus Logic
-        function mineClick() {
-            const bar = $('#mining-bar');
-            const status = $('#mine-status');
+        const inputEl = document.getElementById('hash-input');
+        inputEl.addEventListener('input', (e) => {
+            const val = e.target.value;
+            crystalState.text = val;
             
-            STATE.miningCount += 10;
-            bar.style.width = Math.min(STATE.miningCount, 100) + '%';
-            status.innerText = 'HASHING: ' + Math.random().toString(16).substring(2, 8).toUpperCase();
+            // Visual Updates
+            document.getElementById('display-input').innerText = val;
             
-            if (STATE.miningCount >= 100) {
-                STATE.miningCount = 0;
-                bar.style.width = '0%';
-                status.innerText = 'BLOCK FOUND! NONCE: 2891';
-                showToast('PROOF OF WORK ACCEPTED', 'info');
+            // Simulate Hash Display
+            let hashSim = "";
+            let hashNum = 0;
+            for(let i=0; i<val.length; i++) {
+                hashNum += val.charCodeAt(i);
+                hashSim += val.charCodeAt(i).toString(16);
             }
-        }
+            // Pad for visual effect
+            while(hashSim.length < 32) hashSim += (hashNum % 9);
+            
+            document.getElementById('display-hash').innerText = "0x" + hashSim.substring(0, 20) + "...";
+            document.getElementById('display-vertices').innerText = 3 + (hashNum % 10);
+            
+            // Color Shift based on length (Gold -> Bronze -> White)
+            if (val.length % 3 === 0) crystalState.color = '#D4AF37'; // Gold
+            else if (val.length % 3 === 1) crystalState.color = '#CD7F32'; // Bronze
+            else crystalState.color = '#E5E7EB'; // Silver/White
+        });
 
-        function updateStake(val) {
-            $('#stake-val').innerText = val + ' ETH';
-            $('#win-chance').innerText = (val * 0.8).toFixed(1) + '%';
-        }
-
-        // Smart Contract Logic
-        function triggerContract() {
-            // Rain effect
-            const rainLayer = $('#rain-layer');
-            rainLayer.innerHTML = '';
-            for(let i=0; i<30; i++) {
-                const d = document.createElement('div');
-                d.className = 'absolute bg-purple-500 w-[1px] h-4 opacity-50';
-                d.style.left = Math.random() * 100 + '%';
-                d.style.top = -10 + 'px';
-                d.style.animation = `blink ${Math.random() * 0.5 + 0.5}s infinite`;
-                rainLayer.appendChild(d);
-            }
-            
-            $('#icon-cloud').classList.add('text-purple-400');
-            showToast('ORACLE INPUT: RAIN DETECTED', 'info');
-            
-            setTimeout(() => {
-                $('#flow-signal').classList.replace('w-0', 'w-full');
-            }, 1000);
-            
-            setTimeout(() => {
-                $('#icon-wallet').classList.add('text-green-400');
-                $('#wallet-balance').classList.remove('opacity-0');
-                showToast('CONTRACT EXECUTED: FUNDS TRANSFERRED', 'success');
-            }, 2000);
-            
-            setTimeout(() => {
-                 rainLayer.innerHTML = '';
-                 $('#flow-signal').classList.replace('w-full', 'w-0');
-                 $('#icon-cloud').classList.remove('text-purple-400');
-            }, 4000);
-        }
-
-        // DeFi Logic
-        function updateYield(val) {
-            if (val > 0) {
-                 if (!STATE.yieldInterval) {
-                     STATE.yieldInterval = setInterval(() => {
-                         let current = parseFloat($('#yield-display').innerText);
-                         $('#yield-display').innerText = (current + 0.01 * (val/10)).toFixed(2);
-                     }, 100);
-                 }
-            } else {
-                clearInterval(STATE.yieldInterval);
-                STATE.yieldInterval = null;
-            }
-        }
+        // --- INIT ---
+        resize();
+        initParticles();
+        animate();
+        lucide.createIcons();
 
     </script>
 </body>
