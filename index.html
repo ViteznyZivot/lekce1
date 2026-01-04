@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bay Street: The Golden Ledger</title>
+    <title>Bay Street OS: Web3 Protocol</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,611 +11,821 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Google Fonts: Antonio & Montserrat -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- VISUAL IDENTITY: THE GOLD STANDARD --- */
+        /* --- VISUAL IDENTITY: BAY STREET ELECTRIC --- */
         :root {
-            /* The Void */
-            --color-bg: #000000; 
-            
-            /* The Wealth (Gold) */
-            --gold-primary: #D4AF37; /* Metallic Gold */
-            --gold-light: #FCD34D;   /* Bright Gold */
-            --gold-dark: #B4941F;    /* Deep Gold */
-            
-            /* The Earth (Brown/Bronze) */
-            --bronze-dark: #3E2723;
-            --bronze-light: #8D6E63;
-
-            /* The Structure */
-            --glass-border: rgba(212, 175, 55, 0.3);
-            --glass-bg: rgba(10, 5, 0, 0.85);
+            --bg-deep: #020617; /* Slate 950 */
+            --cyan-electric: #00f0ff;
+            --cyan-dim: #0891b2;
+            --blue-neon: #3b82f6;
+            --error-red: #ff2a6d;
+            --success-green: #05ffa1;
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--color-bg);
-            color: #d4d4d8;
-            overflow-x: hidden;
-            font-size: 16px;
-            font-weight: 400;
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-deep);
+            color: #e2e8f0;
+            overflow: hidden; /* We handle scroll manually/programmatically */
             margin: 0;
+            cursor: crosshair;
         }
 
         h1, h2, h3, .brand-font {
-            font-family: 'Antonio', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #ffffff;
-        }
-
-        /* --- SCROLLYTELLING CANVAS LAYERS --- */
-        #story-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            /* Subtle radial gradient background */
-            background: radial-gradient(circle at center, #1a1005 0%, #000000 100%);
-        }
-
-        /* --- THE TECH (GOLD GLASSMORPHISM) --- */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 
-                        inset 0 0 0 1px rgba(212, 175, 55, 0.1);
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .glass-panel:hover {
-            border-color: var(--gold-primary);
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-        }
-
-        /* --- TEXT EFFECTS --- */
-        .text-gold { color: var(--gold-primary); }
-        .text-gold-light { color: var(--gold-light); }
-        
-        .glow-gold {
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-        }
-
-        /* --- INPUT CRYSTAL --- */
-        .crystal-input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--gold-dark);
-            color: var(--gold-light);
-            font-family: 'Antonio', sans-serif;
-            font-size: 3rem;
-            text-align: center;
-            outline: none;
-            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.1em;
         }
-        .crystal-input:focus {
-            border-bottom-color: var(--gold-light);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+
+        /* --- CANVAS --- */
+        #main-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 80%);
         }
 
-        /* --- SCROLL SECTIONS --- */
-        section {
-            min-height: 100vh;
+        /* --- UI OVERLAY --- */
+        #ui-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 10;
+            pointer-events: none; /* Allow clicks to pass to canvas when needed */
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            position: relative;
-            padding: 2rem;
-            box-sizing: border-box;
+            align-items: center;
         }
 
-        .scroll-trigger {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 1s ease;
+        .pointer-events-auto { pointer-events: auto; }
+
+        /* --- ELEMENTS --- */
+        .glass-panel {
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px var(--cyan-electric);
+            color: var(--cyan-electric);
         }
         
-        .scroll-trigger.active {
-            opacity: 1;
-            transform: translateY(0);
+        .neon-border {
+            box-shadow: 0 0 15px var(--cyan-electric), inset 0 0 10px var(--cyan-electric);
+            border-color: var(--cyan-electric);
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--bronze-dark); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
-
-        .btn-gold {
-            background: linear-gradient(45deg, var(--bronze-dark), #000);
-            border: 1px solid var(--gold-dark);
-            color: var(--gold-primary);
-            padding: 1rem 2rem;
-            font-family: 'Antonio', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .input-glow {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--cyan-dim);
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            outline: none;
             transition: all 0.3s;
         }
-        .btn-gold:hover {
-            background: var(--gold-primary);
-            color: #000;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        .input-glow:focus {
+            border-bottom-color: var(--cyan-electric);
+            text-shadow: 0 0 15px var(--cyan-electric);
+        }
+
+        /* --- PHASE TRANSITIONS --- */
+        .phase-content {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .phase-content.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .phase-content.hidden-left {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+        .phase-content.hidden-right {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        /* --- LEVER --- */
+        .lever-container {
+            width: 60px; height: 150px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        .lever-track {
+            width: 10px; height: 120px;
+            background: #000;
+            margin: 15px auto;
+            border-radius: 5px;
+        }
+        .lever-handle {
+            width: 40px; height: 30px;
+            background: var(--cyan-dim);
+            position: absolute;
+            left: 10px; top: 10px;
+            border-radius: 4px;
+            transition: top 0.2s cubic-bezier(0.4, 2.5, 0.55, 0.5); /* Bouncy */
+            box-shadow: 0 0 10px var(--cyan-electric);
+        }
+        .lever-handle.pulled {
+            top: 110px;
+            background: var(--success-green);
+            box-shadow: 0 0 15px var(--success-green);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scan-overlay {
+            position: fixed; top: 0; left: 0; w-full; h-full;
+            background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.05), transparent);
+            z-index: 5; pointer-events: none;
+            height: 100vh; width: 100vw;
+            animation: scanline 8s linear infinite;
         }
 
     </style>
 </head>
-<body class="antialiased selection:bg-yellow-900 selection:text-white">
+<body>
 
-    <!-- The Canvas Layer (Background Animation) -->
-    <canvas id="story-canvas"></canvas>
+    <canvas id="main-canvas"></canvas>
+    <div class="scan-overlay"></div>
 
-    <!-- Navigation (Minimal) -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center pointer-events-none">
-        <div class="flex items-center gap-3 pointer-events-auto">
-            <i data-lucide="diamond" class="text-yellow-500 w-6 h-6"></i>
-            <span class="brand-font font-bold text-xl tracking-widest text-white">BAY STREET <span class="text-yellow-500">LEDGER</span></span>
+    <!-- HUD -->
+    <div class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 pointer-events-none mix-blend-screen">
+        <div class="flex items-center gap-2">
+            <i data-lucide="cpu" class="text-cyan-400 w-5 h-5 animate-pulse"></i>
+            <span class="font-mono text-xs text-cyan-400">SYS.BSV.3.0 // ONLINE</span>
         </div>
-        <div class="text-xs font-mono text-yellow-600/50">SCROLL TO DISCOVER</div>
-    </nav>
-
-    <!-- Progress Line -->
-    <div class="fixed left-0 top-0 h-1 bg-yellow-600 z-50 transition-all duration-100" id="scroll-progress" style="width: 0%"></div>
-
-
-    <!-- SECTION 1: THE PROBLEM (Bank Glitch) -->
-    <section id="section-intro" class="flex-col text-center relative z-10">
-        <div class="max-w-4xl mx-auto scroll-trigger active" data-index="0">
-            <h1 class="text-6xl md:text-9xl font-black mb-6 text-white drop-shadow-2xl">
-                ZROZENÍ <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500">PRAVDY</span>
-            </h1>
-            <p class="text-gray-400 text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed mb-12">
-                Starý svět bankovek a razítek se hroutí. <br>
-                Data jsou křehká. Důvěra je zlomená.
-            </p>
-            <div class="animate-bounce mt-12 text-yellow-500/50">
-                <i data-lucide="chevron-down" class="w-10 h-10 mx-auto"></i>
+        <div class="flex flex-col items-end">
+            <span class="font-mono text-xs text-gray-500" id="user-identity">GUEST_USER</span>
+            <div class="h-1 w-32 bg-gray-800 mt-1 rounded overflow-hidden">
+                <div id="progress-bar" class="h-full bg-cyan-400 w-0 transition-all duration-500"></div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- SECTION 1.5: THE TRANSITION (Visual only scroll space) -->
-    <section id="section-transition" class="h-[150vh] relative z-10 pointer-events-none">
-        <!-- Just empty space to allow the canvas animation to play out -->
-        <div class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center mix-blend-difference pointer-events-none opacity-0 transition-opacity duration-500" id="glitch-text">
-            <h2 class="text-8xl font-black text-red-500 tracking-tighter glitch-effect">SYSTEM FAILURE</h2>
-            <p class="text-red-400 font-mono mt-4">CENTRAL DATABASE CORRUPTED</p>
-        </div>
-    </section>
+    <!-- UI LAYER -->
+    <div id="ui-layer">
 
-    <!-- SECTION 2: THE BLOCK (Solution) -->
-    <section id="section-block" class="flex-col text-center relative z-10">
-        <div class="glass-panel p-10 md:p-16 rounded-sm max-w-3xl scroll-trigger" data-index="1">
-            <h2 class="text-5xl font-bold mb-6 text-white">NOVÁ STRUKTURA</h2>
-            <p class="text-gray-300 text-lg leading-relaxed mb-8">
-                Z chaosu povstal <strong class="text-yellow-400">BLOK</strong>. 
-                Nezničitelná digitální schránka. Co se do ní jednou zapíše, zůstane tam navěky.
-                Už žádné mazání historie.
-            </p>
-            <div class="flex justify-center gap-8 text-yellow-600/50">
-                <div class="flex flex-col items-center">
-                    <i data-lucide="shield-check" class="w-8 h-8 mb-2"></i>
-                    <span class="text-xs uppercase tracking-widest">Secure</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <i data-lucide="link" class="w-8 h-8 mb-2"></i>
-                    <span class="text-xs uppercase tracking-widest">Linked</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <i data-lucide="infinity" class="w-8 h-8 mb-2"></i>
-                    <span class="text-xs uppercase tracking-widest">Eternal</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECTION 3: HASHING (Generative Art) -->
-    <section id="section-hash" class="relative z-10 flex-col">
-        <div class="w-full max-w-4xl text-center scroll-trigger" data-index="2">
-            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">KRYSTALIZACE DAT</h2>
-            <p class="text-gray-400 mb-12">Každé slovo vytváří unikátní geometrický otisk. Změň jediné písmeno a krystal se roztříští.</p>
-            
+        <!-- PHASE 0: IDENTITY -->
+        <div id="phase-0" class="phase-content active flex-col items-center">
+            <h1 class="text-5xl font-black mb-8 text-white tracking-widest text-center">INITIALIZE<br><span class="text-cyan-400">IDENTITY</span></h1>
             <div class="relative group">
-                <input type="text" id="hash-input" value="BAY STREET" class="crystal-input w-full bg-transparent mb-8 pb-4" autocomplete="off" spellcheck="false">
-                <div class="absolute bottom-24 left-1/2 transform -translate-x-1/2 text-yellow-600/30 text-xs font-mono uppercase tracking-widest pointer-events-none group-hover:text-yellow-500/50 transition-colors">
-                    Type your name
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
-                <div class="glass-panel p-6 border-l-2 border-l-yellow-500">
-                    <h4 class="text-yellow-500 font-bold mb-2">INPUT</h4>
-                    <p class="text-xs text-gray-400 font-mono break-all" id="display-input">BAY STREET</p>
-                </div>
-                <div class="glass-panel p-6 border-l-2 border-l-white">
-                    <h4 class="text-white font-bold mb-2">SHA-256 (Simulace)</h4>
-                    <p class="text-xs text-gray-500 font-mono break-all" id="display-hash">...</p>
-                </div>
-                <div class="glass-panel p-6 border-l-2 border-l-yellow-900">
-                    <h4 class="text-yellow-700 font-bold mb-2">GEOMETRIE</h4>
-                    <p class="text-xs text-gray-400 font-mono">Vertices: <span id="display-vertices" class="text-white">0</span></p>
+                <input type="text" id="username-input" class="input-glow pointer-events-auto w-64 uppercase" placeholder="ENTER NAME" autocomplete="off" maxlength="12">
+                <div class="absolute -bottom-8 left-0 w-full text-center text-xs text-gray-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                    PRESS ENTER TO GENERATE CRYSTAL
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- SECTION 4: THE FUTURE -->
-    <section id="section-future" class="relative z-10">
-        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center scroll-trigger" data-index="3">
-            <div>
-                <h2 class="text-5xl md:text-7xl font-bold mb-8 text-white leading-tight">
-                    ZLATÝ <br><span class="text-yellow-500 glow-gold">STANDARD</span>
-                </h2>
-                <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                    Vítejte ve světě Webu 3.0. Zde se digitální vlastnictví stává hmatatelným. 
-                    Tokeny, NFT, Smart kontrakty - to nejsou jen kódy. Jsou to cihly nové ekonomiky.
-                </p>
-                <button onclick="location.reload()" class="btn-gold flex items-center gap-3 group">
-                    Restartovat Cestu <i data-lucide="refresh-ccw" class="w-5 h-5 group-hover:rotate-180 transition-transform duration-700"></i>
-                </button>
+        <!-- PHASE 1: THE FALL (BANK) -->
+        <div id="phase-1" class="phase-content flex-col items-center">
+            <div class="absolute top-20 text-center pointer-events-none">
+                <h2 class="text-3xl font-bold text-white mb-2">SYSTEM: CENTRALIZED</h2>
+                <p class="text-gray-400 text-sm font-mono">TASK: BYPASS THE INTERMEDIARY</p>
             </div>
             
-            <div class="glass-panel p-8 md:p-12 rotate-3 hover:rotate-0 transition-transform duration-700">
-                <div class="border border-yellow-500/20 p-6 relative">
-                    <div class="absolute -top-3 -left-3 bg-black border border-yellow-500 text-yellow-500 text-xs px-2 py-1 font-mono">SMART CONTRACT</div>
-                    <div class="font-mono text-xs text-gray-500 leading-loose">
-                        <span class="text-yellow-600">contract</span> Vault {<br>
-                        &nbsp;&nbsp;<span class="text-white">uint256</span> public goldBalance;<br>
-                        &nbsp;&nbsp;<span class="text-white">address</span> public owner;<br>
-                        <br>
-                        &nbsp;&nbsp;<span class="text-yellow-600">function</span> withdraw() public {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">require</span>(msg.sender == owner);<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;msg.sender.transfer(address(this).balance);<br>
-                        &nbsp;&nbsp;}<br>
-                        }
+            <!-- Draggable Orb Target Zone (Invisible logic handled by canvas/js, visual hint here) -->
+            <div class="absolute bottom-20 text-cyan-400 text-xs font-mono animate-bounce">
+                DRAG THE ORB
+            </div>
+        </div>
+
+        <!-- PHASE 2: THE FORGE -->
+        <div id="phase-2" class="phase-content flex-col items-center w-full max-w-4xl">
+            <div class="flex gap-12 items-center pointer-events-auto">
+                <!-- Data Slot -->
+                <div class="glass-panel p-8 rounded-xl w-64 h-64 flex flex-col items-center justify-center gap-4 relative" id="data-slot">
+                    <div class="text-xs text-cyan-500 font-mono mb-4 absolute top-4">DATA INPUT</div>
+                    <div class="grid grid-cols-1 gap-2 w-full">
+                        <div class="bg-gray-800/50 p-2 border border-gray-600 rounded text-xs text-center cursor-move hover:border-cyan-400 transition-colors draggable-tx">TX: ALICE -> BOB</div>
+                        <div class="bg-gray-800/50 p-2 border border-gray-600 rounded text-xs text-center cursor-move hover:border-cyan-400 transition-colors draggable-tx">TX: 500 USDC</div>
+                        <div class="bg-gray-800/50 p-2 border border-gray-600 rounded text-xs text-center cursor-move hover:border-cyan-400 transition-colors draggable-tx" contenteditable="true" oninput="breakHash()">METADATA: TIME</div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-8 left-8 glass-panel p-4 border-l-4 border-yellow-500 transform translate-y-32 transition-transform duration-500 z-50 flex items-center gap-3">
-        <i data-lucide="info" class="text-yellow-500"></i>
-        <span id="toast-msg" class="text-sm text-white font-medium">System Ready.</span>
+                <!-- Arrow -->
+                <i data-lucide="arrow-right" class="text-gray-600 w-8 h-8"></i>
+
+                <!-- The Lever -->
+                <div class="flex flex-col items-center gap-4">
+                    <div class="lever-container" onclick="pullLever()">
+                        <div class="lever-track"></div>
+                        <div id="forge-lever" class="lever-handle"></div>
+                    </div>
+                    <span class="text-xs text-gray-500 font-mono">HASH</span>
+                </div>
+
+                <!-- Arrow -->
+                <i data-lucide="arrow-right" class="text-gray-600 w-8 h-8"></i>
+
+                <!-- Result -->
+                <div class="glass-panel p-8 rounded-xl w-64 h-64 flex items-center justify-center relative">
+                    <div class="text-xs text-cyan-500 font-mono mb-4 absolute top-4">BLOCK HASH</div>
+                    <div id="hash-display" class="font-mono text-xs text-gray-500 break-all text-center">WAITING_FOR_INPUT...</div>
+                </div>
+            </div>
+            <div class="mt-8 text-gray-500 text-xs font-mono">EDIT DATA TO BREAK GEOMETRY</div>
+            
+            <button class="mt-8 pointer-events-auto px-6 py-2 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors rounded uppercase font-bold text-sm tracking-widest hidden" id="phase-2-next" onclick="nextPhase()">
+                Proces dokončen. Pokračovat.
+            </button>
+        </div>
+
+        <!-- PHASE 3: THE CHAIN -->
+        <div id="phase-3" class="phase-content flex-col items-center">
+            <div class="absolute top-20 text-center pointer-events-none">
+                <h2 class="text-3xl font-bold text-white mb-2">IMMUTABILITY LINK</h2>
+                <p class="text-gray-400 text-sm font-mono">TRY TO HACK BLOCK #005</p>
+            </div>
+            <button class="absolute bottom-20 pointer-events-auto px-6 py-2 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors rounded uppercase font-bold text-sm tracking-widest hidden" id="phase-3-next" onclick="nextPhase()">
+                Zabezpečení ověřeno. Pokračovat.
+            </button>
+        </div>
+
+        <!-- PHASE 4: CONSENSUS -->
+        <div id="phase-4" class="phase-content flex-col items-center">
+            <div class="absolute top-20 text-center pointer-events-none">
+                <h2 class="text-3xl font-bold text-white mb-2">GLOBAL CONSENSUS</h2>
+                <p class="text-gray-400 text-sm font-mono">BROADCASTING NEW BLOCK...</p>
+            </div>
+            <button class="pointer-events-auto mt-96 px-8 py-3 bg-cyan-500 text-black font-bold text-lg rounded shadow-[0_0_20px_#00f0ff] hover:scale-105 transition-transform" onclick="broadcastBlock()">
+                BROADCAST SIGNAL
+            </button>
+        </div>
+
+        <!-- PHASE 5: SMART CONTRACT -->
+        <div id="phase-5" class="phase-content flex-col items-center">
+             <div class="glass-panel p-10 rounded-xl relative pointer-events-auto">
+                 <h2 class="text-2xl font-bold text-white mb-6 text-center border-b border-gray-700 pb-4">LOGIC GATE: PAYMENT</h2>
+                 <div class="flex justify-between items-center gap-16">
+                     <!-- Input -->
+                     <div class="text-center">
+                         <div class="w-16 h-16 bg-gray-800 rounded-full border-2 border-gray-600 flex items-center justify-center mb-2" id="sc-input">
+                             <i data-lucide="coins" class="text-gray-400 w-8 h-8"></i>
+                         </div>
+                         <button class="text-xs px-3 py-1 bg-gray-700 hover:bg-cyan-600 text-white rounded transition-colors mt-2" onclick="triggerSmartContract()">SEND 50 ETH</button>
+                     </div>
+                     
+                     <!-- Logic -->
+                     <div class="relative w-32 h-1 bg-gray-700">
+                         <div id="sc-signal" class="h-full bg-cyan-400 w-0 transition-all duration-1000"></div>
+                         <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-[10px] text-cyan-500 font-mono bg-black px-1">IF PAID == TRUE</div>
+                     </div>
+
+                     <!-- Output -->
+                     <div class="text-center">
+                         <div class="w-16 h-16 bg-gray-800 rounded-lg border-2 border-red-500 flex items-center justify-center mb-2 shadow-[0_0_15px_#ff2a6d]" id="sc-output">
+                             <i data-lucide="lock" class="text-red-500 w-8 h-8" id="sc-lock-icon"></i>
+                         </div>
+                         <span class="text-xs text-gray-500" id="sc-status">LOCKED</span>
+                     </div>
+                 </div>
+             </div>
+             <button class="mt-12 pointer-events-auto px-6 py-2 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors rounded uppercase font-bold text-sm tracking-widest hidden" id="phase-5-next" onclick="nextPhase()">
+                Vstup povolen. Brána Web3.
+            </button>
+        </div>
+
+        <!-- PHASE 6: NFT/OWNERSHIP -->
+        <div id="phase-6" class="phase-content flex-col items-center">
+            <h1 class="text-6xl font-black mb-4 text-white tracking-widest text-center">WEB3 <span class="text-green-400">ACCESS</span></h1>
+            <p class="text-gray-400 mb-12 font-mono">GENESIS TOKEN MINTED FOR <span id="final-username" class="text-cyan-400">USER</span></p>
+            
+            <!-- 3D Object Container (Canvas handles rendering) -->
+            <div class="w-64 h-64 border border-cyan-500/30 rounded-full relative flex items-center justify-center animate-pulse">
+                <div class="absolute inset-0 bg-cyan-500/5 rounded-full blur-xl"></div>
+                <span class="text-[10px] text-cyan-500/50 absolute bottom-4">ROTATING ARTIFACT</span>
+            </div>
+
+            <button class="mt-12 pointer-events-auto px-8 py-3 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors" onclick="location.reload()">
+                SYSTEM REBOOT
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Notification -->
+    <div id="toast" class="fixed bottom-10 right-10 p-4 bg-black/80 border-l-4 border-cyan-500 text-cyan-400 font-mono text-sm transform translate-y-32 transition-transform duration-300 z-50">
+        SYSTEM MESSAGE
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const PARTICLE_COLOR = '#D4AF37'; // Gold
-        const PARTICLE_SIZE = 2;
-        
-        // --- CANVAS SETUP ---
-        const canvas = document.getElementById('story-canvas');
+        // --- CORE SYSTEM SETUP ---
+        const canvas = document.getElementById('main-canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
-        
+        let phase = 0;
+        let username = "";
+        let particles = [];
+        let mouse = { x: 0, y: 0, down: false };
+        let animationId;
+
+        // --- RESIZE HANDLER ---
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            // Center calculation needs update on resize
-            centerX = width / 2;
-            centerY = height / 2;
         }
         window.addEventListener('resize', resize);
-        
-        // --- STATE & SCROLL LOGIC ---
-        let scrollY = 0;
-        let scrollProgress = 0; // 0 to 1 based on page height
-        let centerX, centerY;
-        
-        // --- PARTICLE SYSTEM (BANK -> BLOCK) ---
+        resize();
+
+        // --- MOUSE INPUT ---
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mousedown', () => mouse.down = true);
+        window.addEventListener('mouseup', () => mouse.down = false);
+
+        // --- PARTICLE ENGINE ---
         class Particle {
-            constructor(x, y, destX, destY) {
-                // Bank State (Icon shape roughly)
-                this.bankX = x;
-                this.bankY = y;
-                
-                // Block State (Perfect Cube/Grid)
-                this.blockX = destX;
-                this.blockY = destY;
-                
-                // Current State
+            constructor(x, y, color = '#00f0ff') {
                 this.x = x;
                 this.y = y;
-                
-                // Glitch factors
-                this.noiseX = (Math.random() - 0.5) * 50;
-                this.noiseY = (Math.random() - 0.5) * 50;
-                this.speed = Math.random() * 0.05 + 0.02;
-                
-                this.size = Math.random() * 2 + 1;
-                this.alpha = Math.random() * 0.5 + 0.3;
+                this.originX = x;
+                this.originY = y;
+                this.color = color;
+                this.size = Math.random() * 2 + 0.5;
+                this.vx = 0;
+                this.vy = 0;
+                this.friction = 0.9;
+                this.ease = 0.1;
+                this.active = true;
             }
 
-            update(progress, time) {
-                // Progress 0.0 - 0.3: Bank State
-                // Progress 0.3 - 0.6: Explosion/Glitch
-                // Progress 0.6 - 1.0: Block State
+            update(targetX, targetY) {
+                // Return to origin or move to target
+                const tx = targetX !== undefined ? targetX : this.originX;
+                const ty = targetY !== undefined ? targetY : this.originY;
+
+                const dx = tx - this.x;
+                const dy = ty - this.y;
                 
-                let targetX, targetY;
-                
-                if (progress < 0.4) {
-                    // Bank State
-                    targetX = this.bankX;
-                    targetY = this.bankY;
-                } else {
-                    // Block State
-                    targetX = this.blockX;
-                    targetY = this.blockY;
+                this.x += dx * this.ease;
+                this.y += dy * this.ease;
+
+                // Mouse interaction (repel/attract based on phase)
+                const mdx = mouse.x - this.x;
+                const mdy = mouse.y - this.y;
+                const dist = Math.sqrt(mdx*mdx + mdy*mdy);
+
+                if (dist < 100) {
+                    const force = (100 - dist) / 100;
+                    const angle = Math.atan2(mdy, mdx);
+                    if (phase === 0) { // Repel in crystal phase
+                         this.x -= Math.cos(angle) * force * 5;
+                         this.y -= Math.sin(angle) * force * 5;
+                    }
                 }
-
-                // GLITCH EFFECT in transition (0.3 to 0.7)
-                let glitchIntensity = 0;
-                if (progress > 0.2 && progress < 0.8) {
-                    // Parabola peak at 0.5
-                    glitchIntensity = 1 - Math.pow((progress - 0.5) * 4, 2); 
-                    if(glitchIntensity < 0) glitchIntensity = 0;
-                }
-
-                // Glitch Text Trigger
-                const glitchText = document.getElementById('glitch-text');
-                if (glitchIntensity > 0.8) {
-                    glitchText.style.opacity = Math.random() > 0.5 ? '1' : '0.5';
-                    glitchText.style.transform = `translate(-50%, -50%) skew(${Math.random()*20-10}deg)`;
-                } else {
-                    glitchText.style.opacity = '0';
-                }
-
-                // Interpolation
-                const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
-                
-                this.x = lerp(this.x, targetX, 0.08);
-                this.y = lerp(this.y, targetY, 0.08);
-
-                // Add Glitch Noise
-                this.x += (Math.random() - 0.5) * glitchIntensity * 100;
-                this.y += (Math.random() - 0.5) * glitchIntensity * 100;
             }
 
             draw() {
-                ctx.fillStyle = `rgba(212, 175, 55, ${this.alpha})`;
+                if(!this.active) return;
+                ctx.fillStyle = this.color;
                 ctx.beginPath();
                 ctx.rect(this.x, this.y, this.size, this.size);
                 ctx.fill();
             }
         }
 
-        let particles = [];
-
-        function initParticles() {
+        // --- PHASE 0: CRYSTAL ---
+        let crystalAngle = 0;
+        
+        function initCrystal() {
             particles = [];
-            resize(); // Ensure center is correct
-            
-            const rows = 20;
-            const cols = 20;
-            const gap = 15;
-            
-            // Define Block Shape (Grid)
-            const blockOffsetX = centerX - (cols * gap) / 2;
-            const blockOffsetY = centerY - (rows * gap) / 2;
+            const count = 400;
+            for(let i=0; i<count; i++) {
+                // Random point in sphere
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos((Math.random() * 2) - 1);
+                const r = 100 + Math.random() * 20;
+                
+                const x = width/2 + r * Math.sin(phi) * Math.cos(theta);
+                const y = height/2 + r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi); // stored for 3d projection
+                
+                const p = new Particle(x, y, '#00f0ff');
+                p.z = z; // custom prop
+                p.phi = phi;
+                p.theta = theta;
+                p.r = r;
+                particles.push(p);
+            }
+        }
 
-            // Define Bank Shape (Pillar Icon)
-            // Top triangle (roof) + Rect body
-            
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    // Block Coords
-                    const bX = blockOffsetX + j * gap;
-                    const bY = blockOffsetY + i * gap;
-                    
-                    // Bank Coords (Simulated)
-                    let bankX, bankY;
-                    
-                    // Roof
-                    if (i < 6) {
-                        const rowWidth = i * 2 + 2;
-                        const startJ = (cols - rowWidth) / 2;
-                        if (j >= startJ && j < startJ + rowWidth) {
-                             bankX = centerX + (j - cols/2) * gap;
-                             bankY = centerY - 150 + i * gap;
-                        } else {
-                            // Debris for unused particles in bank mode
-                            bankX = (Math.random() * width);
-                            bankY = (Math.random() * height); 
-                        }
-                    } 
-                    // Pillars
-                    else if (i >= 6 && i < 16) {
-                        if (j % 4 === 1 || j % 4 === 2) {
-                            bankX = centerX + (j - cols/2) * gap;
-                            bankY = centerY - 150 + i * gap;
-                        } else {
-                            bankX = (Math.random() * width);
-                            bankY = height + Math.random() * 100;
-                        }
-                    }
-                    // Base
-                    else {
-                        if (j > 2 && j < cols - 2) {
-                            bankX = centerX + (j - cols/2) * gap;
-                            bankY = centerY - 150 + i * gap;
-                        } else {
-                            bankX = Math.random() * width;
-                            bankY = height + 100;
-                        }
-                    }
+        // --- PHASE 1: THE BANK & ORB ---
+        let bankParticles = [];
+        let orb = { x: 100, y: 0, r: 30, dragging: false };
+        let bankDestroyed = false;
 
-                    // Push Particle
-                    particles.push(new Particle(bankX, bankY, bX, bY));
+        function initBank() {
+            particles = [];
+            orb.y = height / 2;
+            orb.x = width * 0.15; // Start left
+            
+            // Build Bank Shape (Rectangle + Triangle)
+            const bx = width/2;
+            const by = height/2;
+            
+            // Pillars
+            for(let x=bx-100; x<=bx+100; x+=20) {
+                for(let y=by-100; y<=by+100; y+=10) {
+                     particles.push(new Particle(x, y, '#64748b')); // Grey
+                }
+            }
+            // Roof
+            for(let y=by-180; y<by-100; y+=10) {
+                const w = (y - (by-180)) * 2.5;
+                for(let x=bx-w; x<=bx+w; x+=10) {
+                    particles.push(new Particle(x, y, '#64748b'));
                 }
             }
         }
 
-        // --- CRYSTAL HASHING LOGIC ---
-        let crystalState = {
-            seed: 0,
-            text: "BAY STREET",
-            color: '#D4AF37'
-        };
-
-        function drawCrystal() {
-            const time = Date.now() * 0.001;
-            const inputSection = document.getElementById('section-hash').getBoundingClientRect();
+        // --- PHASE 3: THE CHAIN ---
+        let chainBlocks = [];
+        function initChain() {
+            particles = []; // Clear old
+            chainBlocks = [];
+            const startX = width * 0.1;
+            const centerY = height/2;
+            const size = 80;
+            const gap = 40;
             
-            // Only draw if section is visible
-            if (inputSection.top > window.innerHeight || inputSection.bottom < 0) return;
-
-            // Simple Hash simulation for visuals
-            let hashVal = 0;
-            for(let i=0; i<crystalState.text.length; i++) {
-                hashVal = (hashVal << 5) - hashVal + crystalState.text.charCodeAt(i);
-                hashVal |= 0;
+            for(let i=0; i<10; i++) {
+                chainBlocks.push({
+                    x: startX + i*(size+gap),
+                    y: centerY - size/2,
+                    w: size, h: size,
+                    id: i,
+                    valid: true
+                });
             }
-            const absHash = Math.abs(hashVal);
-            
-            // Setup geometry
-            const numPoints = 3 + (absHash % 10); // 3 to 12 points
-            const radius = 100 + (absHash % 50);
-            
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate(time * (0.2 + (absHash % 10)/50)); // Rotation speed based on hash
-            
-            ctx.beginPath();
-            ctx.strokeStyle = crystalState.color;
-            ctx.lineWidth = 2;
-            
-            for(let i=0; i <= numPoints; i++) {
-                const angle = (i / numPoints) * Math.PI * 2;
-                // Spikiness determined by char codes
-                const mod = (i % 2 === 0) ? 1 : 0.5 + ((absHash % 100)/200);
-                const r = radius * mod;
-                
-                const x = Math.cos(angle) * r;
-                const y = Math.sin(angle) * r;
-                
-                if(i===0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            
-            ctx.closePath();
-            
-            // Glow effect
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = crystalState.color;
-            ctx.stroke();
-            
-            // Inner lines
-            ctx.beginPath();
-            ctx.lineWidth = 0.5;
-            ctx.globalAlpha = 0.5;
-            for(let i=0; i <= numPoints; i++) {
-                const angle = (i / numPoints) * Math.PI * 2;
-                ctx.lineTo(0,0);
-                const x = Math.cos(angle) * radius * ((i%2===0)?1:0.5);
-                const y = Math.sin(angle) * radius * ((i%2===0)?1:0.5);
-                ctx.lineTo(x,y);
-            }
-            ctx.stroke();
-            
-            ctx.restore();
         }
 
-        // --- MAIN RENDER LOOP ---
+        // --- PHASE 4: CONSENSUS ---
+        let nodes = [];
+        let signals = [];
+        function initConsensus() {
+            nodes = [];
+            for(let i=0; i<50; i++) {
+                nodes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    status: 'idle', // idle, verifying, confirmed
+                    timer: 0
+                });
+            }
+        }
+
+        // --- ANIMATION LOOP ---
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            
-            // 1. Calculate Scroll Physics
-            const transitionSection = document.getElementById('section-transition');
-            const transRect = transitionSection.getBoundingClientRect();
-            const winH = window.innerHeight;
-            
-            // Map scroll to 0-1 for the transition phase
-            // Start changing when Section 1 leaves, finish when Section 2 arrives
-            let transProgress = (winH - transRect.top) / (transRect.height + winH);
-            transProgress = Math.max(0, Math.min(1, transProgress));
-            
-            // 2. Draw Particles (Bank -> Block)
-            // Fade out when crystal section appears
-            const hashSection = document.getElementById('section-hash').getBoundingClientRect();
-            let globalAlpha = 1;
-            if (hashSection.top < winH) {
-                globalAlpha = Math.max(0, hashSection.top / winH);
+
+            // === PHASE 0: CRYSTAL ROTATION ===
+            if (phase === 0) {
+                crystalAngle += 0.01;
+                particles.forEach(p => {
+                    // 3D Rotation math
+                    let x = p.r * Math.sin(p.phi) * Math.cos(p.theta + crystalAngle);
+                    let z = p.r * Math.sin(p.phi) * Math.sin(p.theta + crystalAngle);
+                    
+                    // Projection
+                    let scale = 300 / (300 + z);
+                    p.x = width/2 + x * scale;
+                    p.y = height/2 + p.r * Math.cos(p.phi) * scale;
+                    p.size = 2 * scale;
+                    p.active = true;
+                    p.draw();
+                });
+            }
+
+            // === PHASE 1: BANK GLITCH ===
+            if (phase === 1) {
+                // Update Orb (Draggable Logic)
+                if (mouse.down) {
+                    const dx = mouse.x - orb.x;
+                    const dy = mouse.y - orb.y;
+                    if (Math.sqrt(dx*dx + dy*dy) < orb.r * 2) orb.dragging = true;
+                } else {
+                    orb.dragging = false;
+                    // Reset if not completed
+                    if (!bankDestroyed && orb.x < width/2) {
+                        orb.x += (width*0.15 - orb.x) * 0.1;
+                    }
+                }
+
+                if (orb.dragging) {
+                    orb.x = mouse.x;
+                    orb.y = mouse.y;
+                }
+
+                // Check Collision with Bank (Center)
+                if (!bankDestroyed && Math.abs(orb.x - width/2) < 150 && Math.abs(orb.y - height/2) < 150) {
+                    bankDestroyed = true;
+                    showToast("INTERMEDIARY FAILURE. DECENTRALIZING...", "error");
+                    
+                    // Explode Bank
+                    particles.forEach(p => {
+                        p.vx = (Math.random() - 0.5) * 20;
+                        p.vy = (Math.random() - 0.5) * 20;
+                        p.color = '#ff2a6d'; // Turn red
+                    });
+                    
+                    setTimeout(() => {
+                         // Transform to Grid
+                         nextPhase();
+                    }, 2000);
+                }
+
+                // Draw Bank Particles
+                particles.forEach(p => {
+                    if (bankDestroyed) {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.size = Math.random() * 3; // Glitch size
+                    } else {
+                        // Static jitter
+                         p.x = p.originX + (Math.random()-0.5); 
+                    }
+                    p.draw();
+                });
+
+                // Draw Orb
+                ctx.beginPath();
+                ctx.arc(orb.x, orb.y, orb.r, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f0ff';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#00f0ff';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            // === PHASE 2 (FORGE) & 5 (SC) ===
+            if (phase === 2 || phase === 5) {
+                // Just background particles floating
+                if (particles.length === 0) {
+                    for(let i=0; i<50; i++) particles.push(new Particle(Math.random()*width, Math.random()*height, '#0891b2'));
+                }
+                particles.forEach(p => {
+                    p.y -= 0.5;
+                    if(p.y < 0) p.y = height;
+                    p.draw();
+                });
+            }
+
+            // === PHASE 3: CHAIN ===
+            if (phase === 3) {
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 4;
+                
+                // Draw Connections
+                ctx.beginPath();
+                ctx.moveTo(chainBlocks[0].x + 40, chainBlocks[0].y + 40);
+                ctx.lineTo(chainBlocks[chainBlocks.length-1].x + 40, chainBlocks[chainBlocks.length-1].y + 40);
+                ctx.stroke();
+
+                // Draw Blocks
+                chainBlocks.forEach(b => {
+                    ctx.fillStyle = b.valid ? '#0f172a' : '#450a0a'; // Slate vs Red background
+                    ctx.strokeStyle = b.valid ? '#00f0ff' : '#ff2a6d';
+                    ctx.lineWidth = 2;
+                    
+                    // Draw rect
+                    ctx.beginPath();
+                    ctx.rect(b.x, b.y, b.w, b.h);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Text
+                    ctx.fillStyle = 'white';
+                    ctx.font = '12px monospace';
+                    ctx.fillText('#' + b.id, b.x + 10, b.y + 20);
+                    
+                    // Handle Click (Hacking)
+                    if (mouse.down && b.id === 5) { // Hack block 5
+                        invalidateChainFrom(5);
+                    }
+                });
+            }
+
+            // === PHASE 4: CONSENSUS ===
+            if (phase === 4) {
+                // World Map Nodes
+                nodes.forEach(n => {
+                    if (n.status === 'idle') ctx.fillStyle = '#1e293b';
+                    if (n.status === 'verifying') ctx.fillStyle = 'white';
+                    if (n.status === 'confirmed') ctx.fillStyle = '#00f0ff';
+                    
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, 4, 0, Math.PI*2);
+                    ctx.fill();
+                });
+
+                // Signals
+                signals.forEach((s, index) => {
+                    s.r += 5;
+                    ctx.strokeStyle = `rgba(0, 240, 255, ${1 - s.r/300})`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                    ctx.stroke();
+                    
+                    // Hit detection
+                    nodes.forEach(n => {
+                        const d = Math.sqrt((n.x-s.x)**2 + (n.y-s.y)**2);
+                        if (Math.abs(d - s.r) < 10 && n.status === 'idle') {
+                            n.status = 'verifying';
+                            setTimeout(() => n.status = 'confirmed', Math.random()*1000 + 500);
+                        }
+                    });
+
+                    if(s.r > 300) signals.splice(index, 1);
+                });
             }
             
-            ctx.save();
-            ctx.globalAlpha = globalAlpha;
-            particles.forEach(p => {
-                p.update(transProgress, Date.now());
-                p.draw();
-            });
-            ctx.restore();
-
-            // 3. Draw Crystal
-            if (globalAlpha < 0.1) {
-                drawCrystal();
+            // === PHASE 6: NFT ===
+            if (phase === 6) {
+                // Simple 3D Cube rotation
+                crystalAngle += 0.02;
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                
+                const size = 100;
+                const points = [
+                    [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+                    [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
+                ];
+                
+                const projected = points.map(p => {
+                    // Rotate Y
+                    let x = p[0]*Math.cos(crystalAngle) - p[2]*Math.sin(crystalAngle);
+                    let z = p[0]*Math.sin(crystalAngle) + p[2]*Math.cos(crystalAngle);
+                    // Rotate X
+                    let y = p[1]*Math.cos(crystalAngle*0.5) - z*Math.sin(crystalAngle*0.5);
+                    
+                    let scale = 300 / (300 + z + 5);
+                    return {
+                        x: width/2 + x * size * scale,
+                        y: height/2 + y * size * scale
+                    };
+                });
+                
+                // Draw Edges
+                const edges = [
+                    [0,1], [1,2], [2,3], [3,0], // back
+                    [4,5], [5,6], [6,7], [7,4], // front
+                    [0,4], [1,5], [2,6], [3,7]  // connecting
+                ];
+                
+                ctx.beginPath();
+                edges.forEach(e => {
+                    ctx.moveTo(projected[e[0]].x, projected[e[0]].y);
+                    ctx.lineTo(projected[e[1]].x, projected[e[1]].y);
+                });
+                ctx.stroke();
             }
 
             requestAnimationFrame(animate);
         }
 
-        // --- EVENT LISTENERS ---
-        window.addEventListener('scroll', () => {
-            scrollY = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrolled = (scrollY / docHeight) * 100;
-            document.getElementById('scroll-progress').style.width = `${scrolled}%`;
-            
-            // Reveal text triggers
-            const triggers = document.querySelectorAll('.scroll-trigger');
-            triggers.forEach(t => {
-                const rect = t.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.8) {
-                    t.classList.add('active');
-                }
-            });
-        });
+        // --- GAMEPLAY FUNCTIONS ---
 
-        const inputEl = document.getElementById('hash-input');
-        inputEl.addEventListener('input', (e) => {
-            const val = e.target.value;
-            crystalState.text = val;
-            
-            // Visual Updates
-            document.getElementById('display-input').innerText = val;
-            
-            // Simulate Hash Display
-            let hashSim = "";
-            let hashNum = 0;
-            for(let i=0; i<val.length; i++) {
-                hashNum += val.charCodeAt(i);
-                hashSim += val.charCodeAt(i).toString(16);
+        const usernameInput = document.getElementById('username-input');
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                username = usernameInput.value;
+                document.getElementById('user-identity').innerText = username;
+                document.getElementById('final-username').innerText = username;
+                
+                // EXPLOSION ANIMATION
+                particles.forEach(p => {
+                    p.vx = (Math.random() - 0.5) * 20;
+                    p.vy = (Math.random() - 0.5) * 20;
+                });
+                
+                // Transition
+                setTimeout(() => nextPhase(), 1000);
             }
-            // Pad for visual effect
-            while(hashSim.length < 32) hashSim += (hashNum % 9);
-            
-            document.getElementById('display-hash').innerText = "0x" + hashSim.substring(0, 20) + "...";
-            document.getElementById('display-vertices').innerText = 3 + (hashNum % 10);
-            
-            // Color Shift based on length (Gold -> Bronze -> White)
-            if (val.length % 3 === 0) crystalState.color = '#D4AF37'; // Gold
-            else if (val.length % 3 === 1) crystalState.color = '#CD7F32'; // Bronze
-            else crystalState.color = '#E5E7EB'; // Silver/White
         });
 
-        // --- INIT ---
+        function pullLever() {
+            const handle = document.getElementById('forge-lever');
+            if (handle.classList.contains('pulled')) return;
+            
+            handle.classList.add('pulled');
+            
+            // Calc Hash
+            setTimeout(() => {
+                const hash = "0x" + Math.random().toString(16).substr(2, 64);
+                document.getElementById('hash-display').innerText = hash;
+                document.getElementById('hash-display').classList.add('text-green-400');
+                showToast("BLOCK HASHED SUCCESSFULLY", "success");
+                document.getElementById('phase-2-next').classList.remove('hidden');
+            }, 500);
+        }
+
+        function breakHash() {
+            const handle = document.getElementById('forge-lever');
+            if (handle.classList.contains('pulled')) {
+                 document.getElementById('hash-display').innerText = "INVALID_GEOMETRY_ERROR";
+                 document.getElementById('hash-display').classList.replace('text-green-400', 'text-red-500');
+                 handle.classList.remove('pulled');
+                 showToast("DATA TAMPERED! HASH BROKEN.", "error");
+            }
+        }
+
+        function invalidateChainFrom(index) {
+            for(let i=index; i<chainBlocks.length; i++) {
+                chainBlocks[i].valid = false;
+            }
+            showToast("HISTORIC MODIFICATION DETECTED. CHAIN COLLAPSED.", "error");
+            document.getElementById('phase-3-next').classList.remove('hidden');
+        }
+
+        function broadcastBlock() {
+            signals.push({x: width/2, y: height/2, r: 0});
+            setTimeout(() => {
+                 showToast("CONSENSUS REACHED (51%)", "success");
+                 setTimeout(nextPhase, 2000);
+            }, 3000);
+        }
+
+        function triggerSmartContract() {
+            const signal = document.getElementById('sc-signal');
+            const icon = document.getElementById('sc-lock-icon');
+            const status = document.getElementById('sc-status');
+            
+            signal.classList.replace('w-0', 'w-full');
+            
+            setTimeout(() => {
+                icon.classList.replace('text-red-500', 'text-green-500');
+                icon.setAttribute('data-lucide', 'unlock');
+                document.getElementById('sc-output').classList.replace('border-red-500', 'border-green-500');
+                document.getElementById('sc-output').classList.replace('shadow-[0_0_15px_#ff2a6d]', 'shadow-[0_0_15px_#05ffa1]');
+                status.innerText = "UNLOCKED";
+                status.classList.add('text-green-400');
+                lucide.createIcons();
+                showToast("PAYMENT RECEIVED. FUNCTION EXECUTED.", "success");
+                document.getElementById('phase-5-next').classList.remove('hidden');
+            }, 1000);
+        }
+
+        function nextPhase() {
+            // Hide current UI
+            document.getElementById(`phase-${phase}`).classList.remove('active');
+            
+            phase++;
+            document.getElementById('progress-bar').style.width = `${(phase/6)*100}%`;
+            
+            // Init next phase logic
+            if(phase === 1) initBank();
+            if(phase === 3) initChain();
+            if(phase === 4) initConsensus();
+            
+            // Show new UI
+            setTimeout(() => {
+                const nextEl = document.getElementById(`phase-${phase}`);
+                if(nextEl) nextEl.classList.add('active');
+            }, 500);
+        }
+
+        function showToast(msg, type) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.borderColor = type === 'error' ? '#ff2a6d' : '#05ffa1';
+            t.style.color = type === 'error' ? '#ff2a6d' : '#05ffa1';
+            t.classList.remove('translate-y-32');
+            setTimeout(() => t.classList.add('translate-y-32'), 3000);
+        }
+
+        // --- BOOT ---
         resize();
-        initParticles();
+        initCrystal();
         animate();
         lucide.createIcons();
 
