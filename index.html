@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bay Street Guide: Blockchain pro Začátečníky</title>
+    <title>Bay Street: Vstup do Matrixu</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,197 +11,411 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Antonio & Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <style>
-        /* Custom Font Setup */
+        /* --- VISUAL IDENTITY: BAY STREET VISION --- */
         :root {
-            --color-bg: #050505;
-            --color-grid: #1a1a1a;
-            --neon-teal: #2dd4bf;   /* Fáze 1: Sítě */
-            --neon-gold: #fbbf24;   /* Fáze 2: Bitcoin */
-            --neon-purple: #a855f7; /* Fáze 3: Ethereum/Apps */
-            --neon-green: #4ade80;  /* Fáze 4: Peníze/DeFi */
-            --neon-red: #ef4444;
+            /* The Void */
+            --color-bg: #0A0A0A; 
+            
+            /* The Energy (Electric Cyan) */
+            --energy-primary: #06b6d4; /* Cyan-500 */
+            --energy-glow: #22d3ee;    /* Cyan-400 */
+            --energy-deep: #0891b2;    /* Cyan-600 */
+
+            /* The Structure */
+            --structure-dark: #0f172a; /* Slate-900 */
+            --structure-glass: rgba(10, 15, 20, 0.75);
+            
+            /* Phase Accents (Subtle) */
+            --accent-gold: #fbbf24;
+            --accent-purple: #a855f7;
+            --accent-green: #4ade80;
         }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: var(--color-bg);
-            color: #e5e5e5;
+            color: #94a3b8; /* Light gray for body text to reduce eye strain */
             overflow-x: hidden;
-            font-size: 18px; /* Větší písmo pro čitelnost */
+            font-size: 16px;
+            font-weight: 400;
+            margin: 0;
         }
 
         h1, h2, h3, .brand-font {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Antonio', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #ffffff; /* Pure white for headings */
         }
 
-        /* Animated Grid Background */
-        .cyber-grid {
+        /* --- THE VOID (CANVAS LAYER) --- */
+        #matrix-canvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 200vw;
-            height: 200vh;
-            background-image: 
-                linear-gradient(rgba(45, 212, 191, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(45, 212, 191, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
-            animation: gridMove 20s linear infinite;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
-            pointer-events: none;
+            background: radial-gradient(circle at center, #111827 0%, #000000 100%);
         }
 
-        @keyframes gridMove {
-            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px); }
-            100% { transform: perspective(500px) rotateX(60deg) translateY(40px) translateZ(-200px); }
-        }
-
-        /* Glassmorphism Panel */
+        /* --- THE TECH (GLASSMORPHISM) --- */
         .glass-panel {
-            background: rgba(20, 20, 25, 0.85); /* Tmavší pozadí pro lepší kontrast textu */
+            background: var(--structure-glass);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(6, 182, 212, 0.2); /* Cyan tint border */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* Neon Glows */
-        .glow-teal { box-shadow: 0 0 15px rgba(45, 212, 191, 0.4); }
-        .glow-gold { box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
-        .glow-purple { box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
-        .glow-green { box-shadow: 0 0 15px rgba(74, 222, 128, 0.4); }
-        .glow-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
-
-        /* Utilities */
-        .hide { display: none; }
-        .fade-in { animation: fadeIn 0.8s ease-in-out forwards; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .glass-panel:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.15),
+                        inset 0 0 0 1px rgba(6, 182, 212, 0.1);
+            transform: translateY(-2px);
         }
 
-        /* Specific Animations */
-        .float-anim { animation: float 6s ease-in-out infinite; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        /* --- UI ELEMENTS --- */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
         }
 
-        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        /* Network Nodes Animation */
-        .node-line {
+        .btn-matrix {
+            position: relative;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--energy-primary);
+            color: var(--energy-glow);
+            font-family: 'Antonio', sans-serif;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
-
-        .coin-animation {
-            animation: moveCoin 1.5s ease-in-out forwards;
+        .btn-matrix::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.4), transparent);
+            transition: left 0.5s;
         }
 
-        @keyframes moveCoin {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            50% { transform: translate(150px, -50px) scale(1.2); opacity: 1; }
-            100% { transform: translate(300px, 0) scale(0.5); opacity: 0; }
+        .btn-matrix:hover {
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
+            color: white;
+            text-shadow: 0 0 8px rgba(255,255,255,0.8);
+        }
+
+        .btn-matrix:hover::before {
+            left: 100%;
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in { animation: fadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .blink { animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--energy-primary); }
+
+        /* Intro Specific */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 100;
+            pointer-events: none; /* Let clicks pass to canvas initially */
         }
         
-        /* Help Box Style */
-        .help-box {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #fff;
-            padding: 1rem;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-            color: #ccc;
+        .init-btn {
+            pointer-events: auto;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s ease;
         }
+        
+        .show-init {
+            opacity: 1;
+            transform: scale(1);
+        }
+
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative selection:bg-teal-500 selection:text-black">
+<body class="antialiased min-h-screen flex flex-col relative selection:bg-cyan-500 selection:text-black">
 
-    <!-- Background -->
-    <div class="cyber-grid"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-[-1]"></div>
+    <!-- The Void (Canvas) -->
+    <canvas id="matrix-canvas"></canvas>
 
-    <!-- Navigation (Hidden on Intro) -->
-    <nav id="main-nav" class="fixed top-0 w-full z-50 glass-panel border-b border-white/10 hide">
+    <!-- Audio Ambience Visualizer (Simulated) -->
+    <div class="fixed bottom-6 right-6 flex gap-1 items-end h-6 z-50 opacity-50">
+        <div class="w-1 bg-cyan-500 animate-[pulse_1s_ease-in-out_infinite]" style="height: 40%"></div>
+        <div class="w-1 bg-cyan-500 animate-[pulse_1.5s_ease-in-out_infinite]" style="height: 80%"></div>
+        <div class="w-1 bg-cyan-500 animate-[pulse_1.2s_ease-in-out_infinite]" style="height: 60%"></div>
+        <div class="w-1 bg-cyan-500 animate-[pulse_0.8s_ease-in-out_infinite]" style="height: 30%"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="fixed top-0 w-full z-40 glass-panel border-b border-cyan-500/10 hide transition-all duration-700 transform -translate-y-full opacity-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="brain-circuit" class="text-teal-400 w-8 h-8"></i>
-                    <span class="brand-font font-bold text-xl tracking-wider text-white">BAY STREET <span class="text-teal-400">PRŮVODCE</span></span>
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="aperture" class="text-cyan-400 w-8 h-8 animate-[spin_10s_linear_infinite]"></i>
+                    <span class="brand-font font-bold text-2xl tracking-widest text-white">BAY STREET <span class="text-cyan-400 glow-text">NODE</span></span>
                 </div>
                 <div class="hidden md:block">
-                    <div class="flex items-baseline space-x-4 text-sm font-medium" id="nav-steps">
-                        <!-- Navigation items will be injected here -->
+                    <div class="flex items-center space-x-1" id="nav-steps">
+                        <!-- Nav items injected via JS -->
                     </div>
                 </div>
-                <div class="text-xs text-gray-400 font-mono border border-gray-700 px-2 py-1 rounded">
-                    BEGINNER.MODE
+                <div class="flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/5">
+                    <div class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_#22d3ee]"></div>
+                    <span class="text-[10px] text-cyan-200 font-mono tracking-widest">CONNECTED</span>
                 </div>
             </div>
         </div>
-        <!-- Progress Bar -->
-        <div class="h-1 w-full bg-gray-900">
-            <div id="progress-bar" class="h-1 bg-gradient-to-r from-teal-400 to-purple-500 transition-all duration-500" style="width: 0%"></div>
+        <div class="h-[1px] w-full bg-gray-900">
+            <div id="progress-bar" class="h-full bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.8)] transition-all duration-700" style="width: 0%"></div>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main id="app-container" class="flex-grow flex items-center justify-center p-4 pt-20">
-        <!-- Content will be injected here dynamically -->
-    </main>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-8 right-8 glass-panel p-4 rounded border-l-4 border-teal-400 transform translate-y-24 transition-transform duration-300 z-50 flex items-center gap-3 max-w-sm">
-        <i data-lucide="info" class="text-teal-400 flex-shrink-0"></i>
-        <span id="toast-msg" class="text-sm font-medium">Systém připraven.</span>
+    <!-- Intro Interaction Layer -->
+    <div id="intro-overlay">
+        <button id="init-button" class="init-btn btn-matrix px-12 py-4 rounded-sm text-xl font-bold tracking-[0.2em] backdrop-blur-md" onclick="initializeMatrix()">
+            INITIALIZE SYSTEM
+        </button>
+        <p id="intro-hint" class="mt-4 text-cyan-500/50 font-mono text-xs tracking-widest uppercase blink init-btn">Waiting for signal...</p>
     </div>
 
-    <!-- AUDIO ELEMENTS (Simulated via visual feedback, placeholder for structure) -->
+    <!-- Main Content -->
+    <main id="app-container" class="flex-grow flex items-center justify-center p-4 pt-24 min-h-screen opacity-0 transition-opacity duration-1000 z-10">
+        <!-- Dynamic Content -->
+    </main>
+
+    <!-- Notification HUD -->
+    <div id="toast" class="fixed bottom-10 left-10 glass-panel p-4 rounded-lg border-l-2 border-cyan-500 transform translate-y-40 transition-transform duration-500 z-50 flex items-center gap-4 max-w-sm shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+        <div class="p-2 bg-cyan-500/10 rounded-md">
+            <i data-lucide="terminal" class="text-cyan-400 w-5 h-5"></i>
+        </div>
+        <div>
+            <h4 class="text-[10px] uppercase text-gray-500 font-bold tracking-widest mb-0.5">Console Output</h4>
+            <span id="toast-msg" class="text-sm font-medium text-cyan-100 block leading-tight font-mono">System Ready.</span>
+        </div>
+    </div>
     
     <script>
-        // --- APP STATE & CONFIG ---
+        // --- MATRIX CANVAS ENGINE ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        let mouse = { x: 0, y: 0 };
+        let isInitialized = false;
+        
+        // Configuration
+        const PARTICLE_COUNT = 150; // More particles for the network
+        const CONNECT_DISTANCE = 120;
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = width / 2; // Start at center (Singularity)
+                this.y = height / 2;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 2 + 1;
+                this.color = `rgba(6, 182, 212, ${Math.random() * 0.5 + 0.2})`; // Cyan opacity
+                
+                // Singularity state variables
+                this.angle = Math.random() * Math.PI * 2;
+                this.radius = Math.random() * 50; // Cluster radius
+                this.speed = Math.random() * 0.02 + 0.005;
+            }
+
+            update() {
+                if (!isInitialized) {
+                    // SINGULARITY MODE: Orbit around center/mouse
+                    this.angle += this.speed;
+                    const targetX = width/2 + Math.cos(this.angle) * this.radius;
+                    const targetY = height/2 + Math.sin(this.angle) * this.radius;
+                    
+                    // Mouse interaction (Orbit distortion)
+                    const dx = mouse.x - width/2;
+                    const dy = mouse.y - height/2;
+                    
+                    this.x += (targetX + dx*0.1 - this.x) * 0.05;
+                    this.y += (targetY + dy*0.1 - this.y) * 0.05;
+
+                } else {
+                    // NETWORK MODE: Float freely
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Mouse Interaction (Repel/Attract)
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 200) {
+                        const forceDirectionX = dx / dist;
+                        const forceDirectionY = dy / dist;
+                        const force = (200 - dist) / 200;
+                        this.vx += forceDirectionX * force * 0.05;
+                        this.vy += forceDirectionY * force * 0.05;
+                    }
+
+                    // Bounce off walls
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.fillStyle = isInitialized ? 'rgba(10, 10, 10, 0.1)' : 'rgba(10, 10, 10, 0.2)'; // Trails
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw connections only if initialized
+            if (isInitialized) {
+                connectParticles();
+            } else {
+                // Draw connecting lines to mouse in singularity mode to simulate "code trails"
+                ctx.strokeStyle = 'rgba(6, 182, 212, 0.05)';
+                ctx.beginPath();
+                ctx.moveTo(width/2, height/2);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.stroke();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < CONNECT_DISTANCE) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${1 - dist / CONNECT_DISTANCE})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            // Show Init button only if user interacts
+            if (!isInitialized) {
+                document.getElementById('init-button').classList.add('show-init');
+                document.getElementById('intro-hint').classList.add('show-init');
+            }
+        });
+
+        // Start Canvas
+        initParticles();
+        animate();
+
+
+        // --- APP LOGIC ---
+
+        function initializeMatrix() {
+            isInitialized = true;
+            
+            // 1. Explode Particles
+            particles.forEach(p => {
+                p.vx = (Math.random() - 0.5) * 5; // Fast explosion
+                p.vy = (Math.random() - 0.5) * 5;
+            });
+
+            // 2. Hide Intro UI
+            const intro = document.getElementById('intro-overlay');
+            intro.style.opacity = '0';
+            setTimeout(() => intro.style.display = 'none', 1000);
+
+            // 3. Show Main UI
+            const nav = document.getElementById('main-nav');
+            const app = document.getElementById('app-container');
+            
+            nav.classList.remove('hide', '-translate-y-full', 'opacity-0');
+            nav.classList.add('translate-y-0', 'opacity-100');
+            
+            app.classList.remove('opacity-0');
+            app.classList.add('opacity-100');
+
+            // 4. Start App Flow
+            initApp();
+            showToast('NEURAL INTERFACE CONNECTED...', 'info');
+        }
+
+        // --- CONTENT STATE ---
         const STATE = {
             currentPhase: 0,
             phases: [
-                { id: 'intro', title: 'Start', color: 'teal' },
-                { id: 'decentralization', title: '1. Sítě', color: 'teal' },
-                { id: 'blockchain', title: '2. Bloky', color: 'gold' },
-                { id: 'consensus', title: '3. Ověření', color: 'gold' },
-                { id: 'smartcontracts', title: '4. Automaty', color: 'purple' },
-                { id: 'web3', title: '5. Vlastnictví', color: 'green' }
+                { id: 'decentralization', title: '1. Síť', color: 'cyan' },
+                { id: 'blockchain', title: '2. Deník', color: 'gold' },
+                { id: 'consensus', title: '3. Shoda', color: 'blue' },
+                { id: 'smartcontracts', title: '4. Automat', color: 'purple' },
+                { id: 'web3', title: '5. Majetek', color: 'green' }
             ],
-            miningCount: 0,
-            yieldAmount: 0.000,
-            yieldInterval: null,
             blocks: [
-                { id: 1, data: 'Karel poslal 50 Kč Janě', hash: '', prevHash: '0000000000' },
-                { id: 2, data: 'Jana poslala 20 Kč Petrovi', hash: '', prevHash: '' },
-                { id: 3, data: 'Petr koupil obrázek za 10 Kč', hash: '', prevHash: '' }
-            ]
+                { id: 1, data: 'Karel -> Jana: 50 coinů', hash: '', prevHash: '00000000' },
+                { id: 2, data: 'Jana -> Petr: 20 coinů', hash: '', prevHash: '' },
+                { id: 3, data: 'Petr -> Item: Meč', hash: '', prevHash: '' }
+            ],
+            miningCount: 0
         };
 
-        // --- UTILITY FUNCTIONS ---
-        const $ = (selector) => document.querySelector(selector);
-        const $$ = (selector) => document.querySelectorAll(selector);
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
 
         function showToast(msg, type = 'info') {
             const toast = $('#toast');
@@ -209,81 +423,55 @@
             const icon = toast.querySelector('i');
             
             msgEl.innerText = msg;
-            toast.classList.remove('translate-y-24');
+            toast.classList.remove('translate-y-40');
             
-            // Color coding
-            if(type === 'error') {
-                toast.classList.replace('border-teal-400', 'border-red-500');
-                icon.style.color = '#ef4444';
-            } else if (type === 'success') {
-                toast.classList.replace('border-teal-400', 'border-green-400');
-                icon.style.color = '#4ade80';
-            } else {
-                toast.className = 'fixed bottom-8 right-8 glass-panel p-4 rounded border-l-4 border-teal-400 transform transition-transform duration-300 z-50 flex items-center gap-3 max-w-sm';
-                icon.style.color = '#2dd4bf';
-            }
+            // Visual feedback
+            let color = type === 'error' ? 'text-red-400' : (type === 'success' ? 'text-green-400' : 'text-cyan-400');
+            icon.className = `${color} w-5 h-5`;
+            
+            if (type === 'error') toast.classList.replace('border-cyan-500', 'border-red-500');
+            else toast.classList.replace('border-red-500', 'border-cyan-500');
 
-            setTimeout(() => {
-                toast.classList.add('translate-y-24');
-            }, 5000); // Longer timeout for beginners to read
+            setTimeout(() => toast.classList.add('translate-y-40'), 4000);
         }
 
         function simpleHash(str) {
             let hash = 0;
-            if (str.length === 0) return hash.toString(16);
+            if (str.length === 0) return "00000000";
             for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32bit integer
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash = hash & hash;
             }
-            // Zjednodušený hash pro vizualizaci
             return Math.abs(hash).toString(16).padStart(8, '0');
         }
 
-        // --- RENDER ENGINE ---
-        
-        function initApp() {
-            renderPhase(0);
-        }
-
-        function nextPhase() {
-            if (STATE.currentPhase < STATE.phases.length - 1) {
-                STATE.currentPhase++;
-                renderPhase(STATE.currentPhase);
-            }
-        }
+        function initApp() { renderPhase(0); }
 
         function setPhase(index) {
             STATE.currentPhase = index;
             renderPhase(index);
         }
 
+        function nextPhase() {
+            if (STATE.currentPhase < STATE.phases.length - 1) {
+                setPhase(STATE.currentPhase + 1);
+            }
+        }
+
         function updateNav() {
-            const nav = $('#main-nav');
             const list = $('#nav-steps');
             const progressBar = $('#progress-bar');
             
-            if (STATE.currentPhase === 0) {
-                nav.classList.add('hide');
-                return;
-            }
-            
-            nav.classList.remove('hide');
             list.innerHTML = '';
             
-            STATE.phases.slice(1).forEach((phase, idx) => {
-                const actualIdx = idx + 1;
-                const active = actualIdx === STATE.currentPhase;
-                const completed = actualIdx < STATE.currentPhase;
+            STATE.phases.forEach((phase, idx) => {
+                const active = idx === STATE.currentPhase;
+                const completed = idx < STATE.currentPhase;
                 
-                let colorClass = 'text-gray-500 hover:text-gray-300';
-                if (active) colorClass = `text-${phase.color}-400 font-bold glow-${phase.color}`;
-                if (completed) colorClass = 'text-gray-300';
-
                 const btn = document.createElement('button');
-                btn.className = `transition-colors ${colorClass} text-xs md:text-sm`;
-                btn.innerText = phase.title.split('. ')[1]; // Short name
-                btn.onclick = () => setPhase(actualIdx);
+                btn.className = `px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all duration-300 ${active ? 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]' : 'text-gray-600 hover:text-gray-300'}`;
+                btn.innerText = phase.title.split('. ')[1];
+                btn.onclick = () => setPhase(idx);
                 list.appendChild(btn);
             });
 
@@ -295,716 +483,477 @@
 
         function renderPhase(index) {
             const app = $('#app-container');
-            const phaseId = STATE.phases[index].id;
-            
-            // Clean up intervals from previous phases
-            if (STATE.yieldInterval) clearInterval(STATE.yieldInterval);
+            const phase = STATE.phases[index];
             
             updateNav();
-
-            // Setup new content
-            app.innerHTML = ''; // Clear
+            app.innerHTML = '';
             
-            let contentHTML = '';
+            let html = '';
 
-            switch(phaseId) {
-                case 'intro':
-                    contentHTML = `
-                        <div class="text-center max-w-2xl fade-in relative z-10 p-6">
-                            <div class="mb-8 inline-block relative">
-                                <div class="absolute inset-0 bg-teal-500 blur-2xl opacity-20 rounded-full"></div>
-                                <i data-lucide="compass" class="w-24 h-24 text-teal-400 relative z-10 float-anim"></i>
+            // --- PHASE 1: SÍŤ ---
+            if (phase.id === 'decentralization') {
+                html = `
+                    <div class="w-full max-w-6xl fade-in">
+                        <header class="mb-12 border-l-4 border-cyan-500 pl-6">
+                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">ARCHITEKTURA <span class="text-cyan-400 glow-text">SÍTĚ</span></h2>
+                            <p class="text-xl text-gray-400 font-light">Centralizovaná Fragilita vs. Distribuovaná Odolnost</p>
+                        </header>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Old World -->
+                            <div class="glass-panel p-8 rounded-sm group cursor-pointer hover:border-red-500/50 transition-colors" onclick="hackCentral()">
+                                <div class="flex justify-between items-start mb-8">
+                                    <div>
+                                        <h3 class="text-2xl text-white mb-1">LEGACY SYSTEM</h3>
+                                        <span class="text-xs font-mono text-red-500/80 tracking-widest uppercase">Centralizované</span>
+                                    </div>
+                                    <i data-lucide="server-off" class="text-gray-600 group-hover:text-red-500 w-8 h-8 transition-colors"></i>
+                                </div>
+                                
+                                <div id="central-network" class="h-64 bg-black/40 border border-white/5 relative flex items-center justify-center overflow-hidden">
+                                    <div class="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                    <!-- Center Node -->
+                                    <div id="central-core" class="w-16 h-16 bg-gray-800 border border-gray-600 flex items-center justify-center z-10 transition-all duration-300 shadow-2xl">
+                                        <i data-lucide="database" class="text-gray-400 w-6 h-6"></i>
+                                    </div>
+                                    <!-- Connections -->
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <div class="w-full h-[1px] bg-gray-800 absolute top-1/2"></div>
+                                        <div class="h-full w-[1px] bg-gray-800 absolute left-1/2"></div>
+                                    </div>
+                                    <div class="absolute bottom-4 text-[10px] text-gray-600 font-mono tracking-widest uppercase group-hover:text-red-500 transition-colors">Click to attack Mainframe</div>
+                                </div>
                             </div>
-                            <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tighter text-white">
-                                Co je to ten <span class="text-teal-400">Blockchain?</span>
-                            </h1>
-                            <h2 class="text-xl md:text-2xl text-gray-400 mb-8 font-light">
-                                Interaktivní průvodce pro úplné začátečníky
-                            </h2>
-                            <p class="text-gray-300 mb-12 leading-relaxed text-lg">
-                                Často slýcháte slova jako "krypto", "bitcoin" nebo "web3", ale nerozumíte jim? 
-                                <br><br>
-                                Nebojte se. V tomto krátkém kurzu si všechno sami vyzkoušíte. 
-                                Žádná složitá matematika, jen jednoduché ukázky.
-                            </p>
-                            <button onclick="nextPhase()" class="group relative px-8 py-4 bg-teal-500 text-black font-bold text-lg rounded hover:bg-teal-400 transition-all duration-300 shadow-[0_0_20px_rgba(45,212,191,0.5)]">
-                                <span class="relative z-10 flex items-center gap-2">
-                                    ZAČÍT OBJEVOVAT <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                                </span>
+
+                            <!-- New World -->
+                            <div class="glass-panel p-8 rounded-sm group border-cyan-500/30">
+                                <div class="flex justify-between items-start mb-8">
+                                    <div>
+                                        <h3 class="text-2xl text-white mb-1">DISTRIBUTED LEDGER</h3>
+                                        <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Decentralizované</span>
+                                    </div>
+                                    <i data-lucide="share-2" class="text-cyan-500 w-8 h-8"></i>
+                                </div>
+                                
+                                <div class="h-64 bg-black/40 border border-cyan-500/10 relative p-8" id="mesh-grid">
+                                    <!-- Nodes via JS -->
+                                    <div class="grid grid-cols-3 gap-8 h-full items-center justify-items-center">
+                                        ${[...Array(6)].map((_,i) => `
+                                            <div onclick="hackNode(this)" class="w-10 h-10 bg-cyan-900/20 border border-cyan-500/50 rounded-full flex items-center justify-center cursor-pointer hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_15px_#06b6d4] transition-all duration-300 mesh-node relative">
+                                                <i data-lucide="network" class="w-4 h-4 text-cyan-400 pointer-events-none"></i>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                <div class="text-right mt-4 text-[10px] text-cyan-500/50 font-mono tracking-widest">NODES ACTIVE: 6/6</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 flex justify-end">
+                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
+                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                             </button>
                         </div>
-                    `;
-                    break;
+                    </div>
+                `;
+            }
 
-                case 'decentralization':
-                    contentHTML = `
-                        <div class="w-full max-w-4xl fade-in">
-                            <div class="text-center mb-10">
-                                <h2 class="text-3xl text-teal-400 font-bold mb-2">1. JAK SÍTĚ FUNGUJÍ?</h2>
-                                <p class="text-gray-400">Rozdíl mezi "Běžným internetem" a "Blockchainem".</p>
-                            </div>
+            // --- PHASE 2: BLOCKCHAIN ---
+            else if (phase.id === 'blockchain') {
+                html = `
+                    <div class="w-full max-w-6xl fade-in">
+                        <header class="mb-12 border-l-4 border-yellow-500 pl-6">
+                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">IMMUTABLE <span class="text-yellow-400 glow-text">LEDGER</span></h2>
+                            <p class="text-xl text-gray-400 font-light">Princip nezměnitelnosti dat pomocí kryptografických hashů.</p>
+                        </header>
 
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <!-- Centralized -->
-                                <div class="glass-panel p-6 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors relative overflow-hidden group">
-                                    <div class="absolute top-0 left-0 bg-red-500/50 w-full h-1"></div>
-                                    <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-white">
-                                        <i data-lucide="landmark" class="text-red-400"></i> Centralizované (Jako banka)
-                                    </h3>
-                                    <p class="text-sm text-gray-400 mb-4 h-10">Všechna data jsou na jednom místě. Když toto místo spadne, nikdo nic neudělá.</p>
+                        <div class="flex flex-col md:flex-row gap-6 overflow-x-auto pb-8 justify-center px-2">
+                             ${STATE.blocks.map((block, idx) => `
+                                <div id="block-${idx}" class="glass-panel p-6 w-full md:w-96 flex-shrink-0 relative group transition-all duration-500 hover:bg-white/5 border-t-2 ${idx===0 ? 'border-yellow-500' : 'border-gray-700'}">
+                                    <div class="flex justify-between items-center mb-6 opacity-70">
+                                        <span class="font-mono text-xs text-gray-400 tracking-widest">BLOCK_ID: 00${block.id}</span>
+                                        ${idx===0 ? '<span class="text-[10px] bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded">GENESIS</span>' : ''}
+                                    </div>
                                     
-                                    <div id="central-network" class="h-64 relative border border-white/5 rounded-lg bg-black/40 cursor-pointer" onclick="hackCentral()">
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <div id="central-core" class="w-16 h-16 bg-white rounded-lg glow-teal transition-all duration-300 z-10 flex flex-col items-center justify-center border-2 border-gray-200">
-                                                <i data-lucide="server" class="text-black w-8 h-8"></i>
-                                                <span class="text-[10px] text-black font-bold">SERVER</span>
+                                    <div class="space-y-6">
+                                        <div class="relative group/input">
+                                            <label class="text-[10px] uppercase text-cyan-500 tracking-widest mb-2 block">Data Payload</label>
+                                            <textarea oninput="updateBlockData(${idx}, this.value)" class="w-full bg-black/50 border border-gray-700 p-4 text-sm text-gray-300 font-mono focus:border-cyan-500 focus:outline-none focus:text-cyan-400 transition-colors h-24 resize-none block-input">${block.data}</textarea>
+                                            <div class="absolute bottom-2 right-2 opacity-0 group-hover/input:opacity-100 transition-opacity">
+                                                <i data-lucide="edit-3" class="w-3 h-3 text-gray-500"></i>
                                             </div>
-                                        </div>
-                                        <!-- Users connecting to center -->
-                                        <div class="absolute top-10 left-10 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center satellite"><i data-lucide="user" class="w-4 h-4 text-white"></i></div>
-                                        <div class="absolute top-10 right-10 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center satellite"><i data-lucide="user" class="w-4 h-4 text-white"></i></div>
-                                        <div class="absolute bottom-10 left-10 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center satellite"><i data-lucide="user" class="w-4 h-4 text-white"></i></div>
-                                        <div class="absolute bottom-10 right-10 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center satellite"><i data-lucide="user" class="w-4 h-4 text-white"></i></div>
-                                    </div>
-                                    <div class="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded text-sm text-red-200 flex items-center gap-2">
-                                        <i data-lucide="mouse-pointer" class="w-4 h-4 animate-bounce"></i>
-                                        Klikněte na SERVER uprostřed a sledujte, co se stane.
-                                    </div>
-                                </div>
-
-                                <!-- Decentralized -->
-                                <div class="glass-panel p-6 rounded-xl border border-gray-800 hover:border-teal-500/30 transition-colors relative overflow-hidden">
-                                    <div class="absolute top-0 left-0 bg-teal-500/50 w-full h-1"></div>
-                                    <h3 class="text-xl font-bold mb-2 flex items-center gap-2 text-white">
-                                        <i data-lucide="share-2" class="text-teal-400"></i> Decentralizované (Blockchain)
-                                    </h3>
-                                    <p class="text-sm text-gray-400 mb-4 h-10">Data jsou u všech účastníků. Když jeden vypadne, ostatní ho nahradí.</p>
-
-                                    <div id="mesh-network" class="h-64 relative border border-white/5 rounded-lg bg-black/40 cursor-pointer">
-                                        <div class="grid grid-cols-3 grid-rows-2 h-full gap-8 p-8 justify-items-center items-center" id="mesh-grid">
-                                            <!-- Generated via JS -->
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 p-3 bg-teal-500/10 border border-teal-500/30 rounded text-sm text-teal-200 flex items-center gap-2">
-                                        <i data-lucide="mouse-pointer" class="w-4 h-4 animate-bounce"></i>
-                                        Klikněte na libovolný POČÍTAČ a zkuste ho vypnout.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8 flex justify-end">
-                                <button onclick="nextPhase()" class="px-6 py-3 bg-teal-500 text-black font-bold rounded hover:bg-teal-400 transition flex items-center gap-2 shadow-lg shadow-teal-500/20">
-                                    Jde to bez šéfa? Jdeme dál <i data-lucide="arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-
-                case 'blockchain':
-                    // Re-calculate hashes for display
-                    recalcHashes();
-                    contentHTML = `
-                        <div class="w-full max-w-6xl fade-in">
-                            <div class="text-center mb-10">
-                                <h2 class="text-3xl text-yellow-400 font-bold mb-2">2. CO JE TO BLOK?</h2>
-                                <p class="text-gray-400">Představte si to jako digitální účetní knihu, do které nelze gumovat.</p>
-                            </div>
-
-                            <div class="help-box mb-8 rounded border-l-4 border-yellow-400 text-yellow-100">
-                                <p><strong>Jak to funguje:</strong> Každá "stránka" (blok) obsahuje data a unikátní kód (Hash). Tento kód se vypočítá z obsahu. Pokud změníte byť jen písmenko v obsahu, kód se změní. A protože každý blok obsahuje kód toho předchozího, změna by rozbila celý řetěz.</p>
-                            </div>
-
-                            <div class="flex flex-col md:flex-row gap-4 overflow-x-auto pb-8 items-start justify-center" id="chain-container">
-                                ${STATE.blocks.map((block, idx) => `
-                                    <div id="block-${idx}" class="glass-panel p-5 rounded-lg border-l-4 ${idx === 0 ? 'border-yellow-400' : 'border-gray-600'} w-full md:w-80 flex-shrink-0 relative transition-all duration-500">
-                                        <div class="flex justify-between items-center mb-4">
-                                            <span class="text-lg font-bold text-white">BLOK #${block.id}</span>
                                         </div>
                                         
-                                        <div class="space-y-4">
-                                            <div class="bg-black/30 p-2 rounded border border-white/5">
-                                                <label class="text-[10px] uppercase text-gray-500 block mb-1">Odkaz na předchozí blok</label>
-                                                <div id="prev-${idx}" class="font-mono text-xs text-gray-400 truncate">
-                                                    ${block.prevHash}
-                                                </div>
+                                        <div class="grid grid-cols-1 gap-2">
+                                            <div class="bg-black/30 p-2 border border-white/5 flex justify-between items-center">
+                                                <span class="text-[10px] text-gray-600 uppercase">Prev</span>
+                                                <span id="prev-${idx}" class="font-mono text-xs text-gray-500 truncate w-32 text-right">${block.prevHash}</span>
                                             </div>
-                                            
-                                            <div>
-                                                <label class="text-xs uppercase text-yellow-400 font-bold block mb-1">Zápis (Transakce)</label>
-                                                <textarea 
-                                                    oninput="updateBlockData(${idx}, this.value)" 
-                                                    class="w-full bg-gray-800 border border-gray-600 rounded p-3 text-sm text-white focus:border-yellow-400 focus:outline-none transition-colors h-24 resize-none"
-                                                >${block.data}</textarea>
-                                            </div>
-
-                                            <div class="bg-black/30 p-2 rounded border border-white/5">
-                                                <label class="text-[10px] uppercase text-gray-500 block mb-1">Digitální otisk (Hash)</label>
-                                                <div id="hash-${idx}" class="font-mono text-sm text-yellow-400 break-all font-bold">
-                                                    loading...
-                                                </div>
+                                            <div class="bg-black/30 p-2 border border-white/5 flex justify-between items-center relative overflow-hidden">
+                                                <span class="text-[10px] text-gray-600 uppercase">Hash</span>
+                                                <span id="hash-${idx}" class="font-mono text-xs text-yellow-500 truncate w-32 text-right font-bold relative z-10">...</span>
+                                                <div class="absolute inset-0 bg-yellow-500/5"></div>
                                             </div>
                                         </div>
-
-                                        ${idx < STATE.blocks.length - 1 ? 
-                                            '<div class="hidden md:flex absolute -right-6 top-1/2 transform -translate-y-1/2 z-10 w-8 h-8 bg-gray-700 rounded-full items-center justify-center border border-gray-500"><i data-lucide="link" class="text-white w-4 h-4"></i></div>' : ''}
-                                        ${idx < STATE.blocks.length - 1 ? 
-                                            '<div class="md:hidden flex justify-center py-2"><i data-lucide="arrow-down" class="text-gray-600"></i></div>' : ''}
                                     </div>
-                                `).join('')}
-                            </div>
-
-                            <div class="flex flex-col items-center gap-4 mt-4">
-                                <div class="flex gap-4">
-                                    <button onclick="cheatBlock()" class="px-6 py-3 bg-red-500/20 border border-red-500 text-red-200 hover:bg-red-500 hover:text-white transition rounded flex items-center gap-2">
-                                        <i data-lucide="edit-2"></i> Zkusit podvádět (Změnit data)
-                                    </button>
-                                    <button onclick="repairChain()" class="px-6 py-3 bg-green-500/20 border border-green-500 text-green-200 hover:bg-green-500 hover:text-black transition rounded flex items-center gap-2">
-                                        <i data-lucide="refresh-cw"></i> Obnovit pravdu
-                                    </button>
+                                    
+                                    ${idx < STATE.blocks.length - 1 ? '<div class="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-gray-700"><i data-lucide="link" class="w-6 h-6"></i></div>' : ''}
                                 </div>
-                                <p class="text-sm text-gray-400 max-w-lg text-center">
-                                    Tip: Klikněte na "Zkusit podvádět". Uvidíte, že se změní "Otisk" prvního bloku. Protože druhý blok odkazuje na starý otisk, spojení se přetrhne (zčervená). Podvod je okamžitě vidět.
+                             `).join('')}
+                        </div>
+
+                        <div class="flex justify-center gap-6 mt-8">
+                             <button onclick="cheatBlock()" class="px-6 py-3 border border-red-900/50 hover:bg-red-900/20 text-red-400 text-sm font-bold uppercase tracking-widest transition-all">
+                                Simulate Attack
+                            </button>
+                             <button onclick="repairChain()" class="px-6 py-3 border border-green-900/50 hover:bg-green-900/20 text-green-400 text-sm font-bold uppercase tracking-widest transition-all">
+                                Resync Nodes
+                            </button>
+                        </div>
+                        
+                        <div class="mt-12 flex justify-end">
+                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
+                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                setTimeout(updateAllHashesDisplay, 100);
+            }
+            
+            // --- PHASE 3: CONSENSUS ---
+            else if (phase.id === 'consensus') {
+                html = `
+                    <div class="w-full max-w-5xl fade-in">
+                        <header class="mb-12 border-l-4 border-blue-500 pl-6">
+                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">NETWORK <span class="text-blue-400 glow-text">CONSENSUS</span></h2>
+                            <p class="text-xl text-gray-400 font-light">Algoritmy shody v distribuovaném prostředí.</p>
+                        </header>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- PoW -->
+                            <div class="glass-panel p-8 relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-gradient-to-b from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex items-center gap-4 mb-6 relative z-10">
+                                    <div class="p-3 bg-yellow-500/10 rounded-full border border-yellow-500/20">
+                                        <i data-lucide="cpu" class="w-6 h-6 text-yellow-500"></i>
+                                    </div>
+                                    <h3 class="text-2xl text-white font-bold">PROOF OF WORK</h3>
+                                </div>
+                                <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
+                                    Soutěž výpočetním výkonem. Těžaři hledají "nonce", aby validovali blok. Bezpečné, ale energeticky náročné.
                                 </p>
-                            </div>
-
-                             <div class="mt-12 flex justify-end border-t border-white/10 pt-4">
-                                <button onclick="nextPhase()" class="px-6 py-3 bg-yellow-500 text-black font-bold rounded hover:bg-yellow-400 transition flex items-center gap-2 shadow-lg shadow-yellow-500/20">
-                                    Jak se shodneme na pravdě? <i data-lucide="arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    setTimeout(updateAllHashesDisplay, 100);
-                    break;
-
-                case 'consensus':
-                    contentHTML = `
-                        <div class="w-full max-w-5xl fade-in">
-                            <div class="text-center mb-10">
-                                <h2 class="text-3xl text-yellow-400 font-bold mb-2">3. JAK SE POČÍTAČE DOMLUVÍ?</h2>
-                                <p class="text-gray-400">V síti není šéf. Musí existovat pravidla (Konsenzus), jak přidat novou stránku do účetní knihy.</p>
-                            </div>
-
-                            <div class="grid md:grid-cols-2 gap-12">
-                                <!-- PoW -->
-                                <div class="glass-panel p-6 rounded-xl border-t-4 border-yellow-500">
-                                    <div class="flex items-center gap-3 mb-4">
-                                        <div class="p-3 bg-yellow-500/20 rounded-full">
-                                            <i data-lucide="pickaxe" class="text-yellow-400 w-8 h-8"></i>
-                                        </div>
-                                        <h3 class="text-xl font-bold">Varianta A: Těžba (Proof of Work)</h3>
-                                    </div>
-                                    <p class="text-sm text-gray-300 mb-6 min-h-[60px]">
-                                        Používá např. <strong>Bitcoin</strong>. Počítače řeší složitou hádanku (jako Sudoku). Kdo ji vyřeší první, smí zapsat blok a dostane odměnu. Je to bezpečné, ale stojí to hodně elektřiny.
-                                    </p>
-                                    
-                                    <div class="bg-black/50 p-6 rounded-lg border border-white/10 text-center">
-                                        <div class="text-xs text-gray-400 mb-2 uppercase tracking-widest">Simulátor Těžaře</div>
-                                        <div class="w-full bg-gray-700 rounded-full h-6 mb-4 overflow-hidden relative border border-gray-600">
-                                            <div id="mining-bar" class="bg-yellow-400 h-full transition-all duration-100 flex items-center justify-end pr-2" style="width: 0%">
-                                                <span class="text-[10px] text-black font-bold">HLEDÁM...</span>
-                                            </div>
-                                        </div>
-                                        <button id="mine-btn" onclick="mineClick()" class="w-full py-4 bg-yellow-500 text-black font-bold text-lg rounded hover:bg-yellow-400 active:scale-95 transition-transform shadow-lg shadow-yellow-500/20">
-                                            KLIKAT PRO TĚŽBU
-                                        </button>
-                                        <div id="mine-status" class="mt-3 text-sm font-mono text-gray-400 h-6">Klikáním simulujete práci počítače...</div>
-                                    </div>
-                                </div>
-
-                                <!-- PoS -->
-                                <div class="glass-panel p-6 rounded-xl border-t-4 border-blue-500">
-                                    <div class="flex items-center gap-3 mb-4">
-                                        <div class="p-3 bg-blue-500/20 rounded-full">
-                                            <i data-lucide="scale" class="text-blue-400 w-8 h-8"></i>
-                                        </div>
-                                        <h3 class="text-xl font-bold">Varianta B: Sázka (Proof of Stake)</h3>
-                                    </div>
-                                    <p class="text-sm text-gray-300 mb-6 min-h-[60px]">
-                                        Používá např. <strong>Ethereum</strong>. Místo pálení elektřiny uživatelé složí "kauci" (vlastní mince). Kdo složí více, má větší šanci kontrolovat bloky. Když podvádí, o kauci přijde.
-                                    </p>
-
-                                    <div class="bg-black/50 p-6 rounded-lg border border-white/10">
-                                        <div class="flex justify-between text-sm text-gray-400 mb-2">
-                                            <span>VAŠE KAUCE (STAKE)</span>
-                                            <span id="stake-val" class="text-blue-400 font-bold">0 mincí</span>
-                                        </div>
-                                        <input type="range" min="0" max="100" value="0" class="w-full h-4 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500 mb-6" oninput="updateStake(this.value)">
-                                        
-                                        <div class="flex justify-between items-center bg-blue-500/10 p-4 rounded border border-blue-500/20">
-                                            <span class="text-sm text-blue-300">Šance na výhru:</span>
-                                            <span id="win-chance" class="text-3xl font-bold text-blue-400">0%</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500 mt-2 text-center">Posuňte posuvník doprava pro zvýšení kauce.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-12 flex justify-end border-t border-white/10 pt-4">
-                                <button onclick="nextPhase()" class="px-6 py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-400 transition flex items-center gap-2 shadow-lg shadow-blue-500/20">
-                                    Co umí chytré peníze? <i data-lucide="arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-
-                case 'smartcontracts':
-                    contentHTML = `
-                        <div class="w-full max-w-4xl fade-in">
-                            <div class="text-center mb-10">
-                                <h2 class="text-3xl text-purple-400 font-bold mb-2">4. PROGRAMOVATELNÉ PENÍZE</h2>
-                                <p class="text-gray-400">Co je to "Smart Contract"? Představte si ho jako <strong>automat na kávu</strong>.</p>
-                            </div>
-
-                            <div class="help-box mb-8 border-l-4 border-purple-500 text-purple-100">
-                                <p><strong>Automat na kávu:</strong> Vhodíte minci -> zmáčknete tlačítko -> dostanete kávu. Nepotřebujete u toho prodavače, který by kontroloval, zda jste dali správnou minci. Stroj to udělá sám podle pravidel.<br>Smart Contract dělá to samé s penězi na internetu.</p>
-                            </div>
-
-                            <div class="glass-panel p-8 rounded-xl border border-purple-500/30 relative overflow-hidden min-h-[400px]">
                                 
-                                <div class="flex flex-col md:flex-row items-center justify-between gap-8 mt-4">
-                                    
-                                    <!-- The Logic Block -->
-                                    <div class="w-full md:w-1/3 bg-black/60 p-6 rounded-xl border border-gray-700 shadow-xl">
-                                        <div class="text-sm font-bold text-gray-300 mb-4 border-b border-gray-700 pb-2">PRAVIDLA AUTOMATU</div>
-                                        <div class="flex flex-col gap-3 font-mono text-sm">
-                                            <div class="bg-gray-800 p-3 rounded text-blue-300 flex items-center gap-2">
-                                                <i data-lucide="cloud-rain" class="w-4 h-4"></i> KDYŽ: Prší
-                                            </div>
-                                            <div class="flex justify-center"><i data-lucide="arrow-down" class="w-4 h-4 text-gray-600"></i></div>
-                                            <div class="bg-gray-800 p-3 rounded text-green-300 flex items-center gap-2">
-                                                <i data-lucide="send" class="w-4 h-4"></i> POTOM: Pošli peníze
-                                            </div>
-                                        </div>
-                                        <button onclick="triggerRain()" class="mt-6 w-full py-3 bg-purple-600 text-white font-bold rounded hover:bg-purple-500 transition shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2">
-                                            Spustit Simulaci
-                                        </button>
+                                <div class="bg-black/40 p-6 border border-white/5 relative z-10">
+                                    <div class="h-2 bg-gray-800 rounded-full overflow-hidden mb-4">
+                                        <div id="mining-bar" class="h-full bg-yellow-500 w-0 transition-all duration-75"></div>
                                     </div>
-
-                                    <!-- The Visual Scene -->
-                                    <div class="w-full md:w-2/3 h-72 bg-gray-900/80 rounded-xl relative border border-white/10 flex items-center justify-between px-12 overflow-hidden" id="scene-canvas">
-                                        
-                                        <!-- Rain container -->
-                                        <div id="rain-container" class="absolute inset-0 pointer-events-none"></div>
-
-                                        <!-- Vault -->
-                                        <div class="text-center z-10 relative group">
-                                            <div class="w-20 h-20 bg-gray-800 rounded-xl flex items-center justify-center border-2 border-gray-600 mb-2 shadow-lg group-hover:border-purple-400 transition-colors">
-                                                <i data-lucide="archive" class="text-gray-400 w-10 h-10"></i>
-                                            </div>
-                                            <span class="text-sm font-bold text-gray-400">POJIŠŤOVNA</span>
-                                        </div>
-
-                                        <!-- Connection Line -->
-                                        <div class="h-2 bg-gray-800 flex-grow mx-4 relative rounded-full overflow-hidden">
-                                            <div id="flow-line" class="absolute top-0 left-0 h-full bg-purple-500 w-0 transition-all duration-1000"></div>
-                                        </div>
-
-                                        <!-- Wallet -->
-                                        <div class="text-center z-10 relative">
-                                            <div id="wallet-icon" class="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center border-2 border-gray-600 mb-2 shadow-lg transition-colors duration-500">
-                                                <i data-lucide="wallet" class="text-gray-400 w-10 h-10"></i>
-                                            </div>
-                                            <span class="text-sm font-bold text-gray-400">VÁŠ ÚČET</span>
-                                            <div id="wallet-balance" class="text-green-400 font-mono font-bold text-lg opacity-0 transition-opacity mt-1">
-                                                +5.00 ETH
-                                            </div>
-                                        </div>
-
-                                        <!-- Coin Element (Hidden initially) -->
-                                        <div id="flying-coin" class="absolute left-20 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-lg shadow-lg glow-gold opacity-0 z-20 border-2 border-yellow-200">
-                                            $
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="text-center text-gray-500 text-sm mt-4">Klikněte na "Spustit Simulaci". Systém sám ověří, že prší (data z internetu) a okamžitě vám pošle odškodné.</p>
-                            </div>
-
-                            <div class="mt-12 flex justify-end border-t border-white/10 pt-4">
-                                <button onclick="nextPhase()" class="px-6 py-3 bg-purple-500 text-white font-bold rounded hover:bg-purple-400 transition flex items-center gap-2 shadow-lg shadow-purple-500/20">
-                                    Co se dá vlastnit? <i data-lucide="arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-
-                case 'web3':
-                    contentHTML = `
-                         <div class="w-full max-w-5xl fade-in">
-                            <div class="text-center mb-10">
-                                <h2 class="text-3xl text-green-400 font-bold mb-2">5. DIGITÁLNÍ MAJETEK (Web3)</h2>
-                                <p class="text-gray-400">V novém internetu můžete věci skutečně vlastnit, ne si je jen pronajímat.</p>
-                            </div>
-
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <!-- NFT Section -->
-                                <div class="glass-panel p-6 rounded-xl border border-pink-500/30">
-                                    <div class="flex justify-between items-start mb-6">
-                                        <h3 class="text-xl font-bold text-pink-400 flex items-center gap-2">
-                                            <i data-lucide="image" class="w-6 h-6"></i> NFT (Certifikát)
-                                        </h3>
-                                    </div>
-                                    
-                                    <div class="flex flex-col items-center">
-                                        <div class="w-48 h-64 bg-gradient-to-br from-indigo-900 to-pink-900 rounded-lg p-4 relative shadow-[0_0_20px_rgba(236,72,153,0.3)] group cursor-pointer hover:scale-105 transition-transform duration-300 border-4 border-gray-800">
-                                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
-                                            <div class="h-full border border-white/20 flex flex-col items-center justify-center relative z-10">
-                                                <i data-lucide="feather" class="w-20 h-20 text-pink-300 mb-4 drop-shadow-lg"></i>
-                                                <div class="text-center">
-                                                    <div class="font-orbitron font-bold text-white tracking-widest">KŘÍDLA</div>
-                                                    <div class="text-xs text-pink-300 mt-1 font-mono">Originál #8842</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-6 text-sm text-gray-300 text-center bg-black/40 p-3 rounded">
-                                            <p>Stejně jako máte techničák k autu, NFT je <strong>techničák k digitálnímu obrázku</strong>. Kdokoliv si může obrázek zkopírovat, ale jen vy máte "papír", že je váš.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- DeFi Section -->
-                                <div class="glass-panel p-6 rounded-xl border border-green-500/30">
-                                    <div class="flex justify-between items-start mb-6">
-                                        <h3 class="text-xl font-bold text-green-400 flex items-center gap-2">
-                                            <i data-lucide="trending-up" class="w-6 h-6"></i> DeFi (Banka bez banky)
-                                        </h3>
-                                    </div>
-
-                                    <div class="bg-black/40 p-6 rounded-lg border border-white/5 h-full flex flex-col justify-between">
-                                        <div>
-                                            <p class="text-sm text-gray-300 mb-4">
-                                                Místo abyste dali peníze bance, která vám dá 0.1% úrok, půjčíte je přímo do "společného banku" (Liquidity Pool).
-                                            </p>
-                                            <label class="text-sm font-bold text-green-400 mb-2 block">Kolik půjčíte do banku?</label>
-                                            <div class="flex items-center gap-4 mb-6">
-                                                <input type="range" id="liquidity-slider" min="0" max="100" value="0" class="w-full h-4 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500" oninput="updateYield(this.value)">
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center py-6 bg-gray-800/50 rounded-xl mb-4">
-                                            <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Váš zisk v reálném čase</div>
-                                            <div class="text-4xl font-mono font-bold text-white flex justify-center items-end gap-2">
-                                                <span id="yield-display">0.0000</span> <span class="text-sm text-green-500 mb-2">Kč</span>
-                                            </div>
-                                            <div class="text-xs text-green-400 mt-2 font-bold" id="yield-rate">Úrok: 0%</div>
-                                        </div>
-                                        
-                                        <p class="text-xs text-center text-gray-500">Posuňte posuvník a sledujte, jak vám naskakují úroky.</p>
-                                    </div>
+                                    <button onclick="mineClick()" class="w-full py-4 border border-yellow-500/30 hover:bg-yellow-500/10 text-yellow-500 font-mono text-sm uppercase tracking-widest transition-all">
+                                        INITIALIZE HASHING
+                                    </button>
+                                    <div id="mine-status" class="mt-2 text-[10px] font-mono text-gray-600 h-4">IDLE_STATE</div>
                                 </div>
                             </div>
 
-                            <div class="mt-12 text-center p-8 bg-gradient-to-t from-teal-900/40 to-transparent rounded-xl">
-                                <h3 class="text-3xl font-bold text-white mb-4">GRATULUJI! 🎓</h3>
-                                <p class="text-gray-300 mb-6 max-w-2xl mx-auto text-lg">
-                                    Právě jste prošli základy Webu 3.0. Už víte, že to není magie, ale jen 
-                                    <strong>sdílená účetní kniha</strong> (Blockchain), 
-                                    <strong>chytré automaty</strong> (Smart Contracts) a 
-                                    <strong>digitální vlastnictví</strong> (NFT).
+                            <!-- PoS -->
+                            <div class="glass-panel p-8 relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="flex items-center gap-4 mb-6 relative z-10">
+                                    <div class="p-3 bg-blue-500/10 rounded-full border border-blue-500/20">
+                                        <i data-lucide="scale" class="w-6 h-6 text-blue-500"></i>
+                                    </div>
+                                    <h3 class="text-2xl text-white font-bold">PROOF OF STAKE</h3>
+                                </div>
+                                <p class="text-gray-400 text-sm mb-8 font-light leading-relaxed">
+                                    Validátoři jsou vybráni na základě uzamčeného kapitálu (Stake). Ekonomická bezpečnost místo fyzické energie.
                                 </p>
-                                <button onclick="location.reload()" class="px-8 py-3 bg-white text-black font-bold rounded hover:bg-gray-200 transition shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                                    ZAČÍT ZNOVU
-                                </button>
+                                
+                                <div class="bg-black/40 p-6 border border-white/5 relative z-10">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-[10px] text-gray-500 uppercase tracking-widest">Staked Amount</span>
+                                        <span id="stake-val" class="font-mono text-blue-400">0 ETH</span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="0" class="w-full h-1 bg-gray-800 appearance-none cursor-pointer accent-blue-500 mb-6" oninput="updateStake(this.value)">
+                                    
+                                    <div class="flex justify-between items-end border-t border-white/5 pt-4">
+                                        <span class="text-[10px] text-gray-500 uppercase">Probability</span>
+                                        <span id="win-chance" class="text-2xl font-mono text-white">0%</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    `;
-                    break;
+
+                        <div class="mt-12 flex justify-end">
+                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
+                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // --- PHASE 4: SMART CONTRACTS ---
+            else if (phase.id === 'smartcontracts') {
+                html = `
+                    <div class="w-full max-w-5xl fade-in">
+                        <header class="mb-12 border-l-4 border-purple-500 pl-6">
+                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">SMART <span class="text-purple-400 glow-text">CONTRACTS</span></h2>
+                            <p class="text-xl text-gray-400 font-light">Deterministický kód. "If This, Then That" na blockchainu.</p>
+                        </header>
+
+                        <div class="glass-panel p-8 border-purple-500/20 relative overflow-hidden">
+                            <div class="grid md:grid-cols-3 gap-8">
+                                <!-- Code Logic -->
+                                <div class="col-span-1 space-y-4 z-10">
+                                    <div class="bg-black/60 p-4 border border-purple-500/20 font-mono text-xs text-gray-400 leading-loose">
+                                        <span class="text-purple-400">function</span> execute() {<br>
+                                        &nbsp;&nbsp;<span class="text-blue-400">if</span> (oracle.rain) {<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;transfer(100);<br>
+                                        &nbsp;&nbsp;}<br>
+                                        }
+                                    </div>
+                                    <button onclick="triggerContract()" class="w-full py-4 bg-purple-600/20 hover:bg-purple-600 text-white font-bold tracking-widest uppercase transition-all border border-purple-500/50 flex items-center justify-center gap-2">
+                                        <i data-lucide="play" class="w-4 h-4"></i> Execute
+                                    </button>
+                                </div>
+
+                                <!-- Visualizer -->
+                                <div class="col-span-2 bg-gray-900/50 border border-white/5 relative h-64 overflow-hidden" id="contract-scene">
+                                    <div class="absolute inset-0 grid grid-cols-3 items-center text-center z-20">
+                                        <div>
+                                            <i data-lucide="cloud" class="w-12 h-12 text-gray-600 mx-auto mb-2 transition-colors" id="icon-cloud"></i>
+                                            <span class="text-[10px] uppercase tracking-widest text-gray-600">Oracle Data</span>
+                                        </div>
+                                        <div class="relative">
+                                            <div class="h-[2px] w-full bg-gray-800"></div>
+                                            <div id="flow-signal" class="absolute top-0 left-0 h-[2px] w-0 bg-purple-500 transition-all duration-1000"></div>
+                                        </div>
+                                        <div>
+                                            <i data-lucide="wallet" class="w-12 h-12 text-gray-600 mx-auto mb-2 transition-colors" id="icon-wallet"></i>
+                                            <span class="text-[10px] uppercase tracking-widest text-gray-600">User Wallet</span>
+                                            <div id="wallet-balance" class="opacity-0 text-green-400 font-mono font-bold mt-1">+100 CR</div>
+                                        </div>
+                                    </div>
+                                    <!-- Rain Layer -->
+                                    <div id="rain-layer" class="absolute inset-0 pointer-events-none z-10"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 flex justify-end">
+                             <button onclick="nextPhase()" class="btn-matrix px-8 py-3 flex items-center gap-4 group">
+                                PŘEJÍT DÁL <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // --- PHASE 5: ASSETS ---
+            else if (phase.id === 'web3') {
+                html = `
+                    <div class="w-full max-w-5xl fade-in">
+                        <header class="mb-12 border-l-4 border-green-500 pl-6">
+                            <h2 class="text-6xl text-white font-bold mb-2 tracking-tight">DIGITAL <span class="text-green-400 glow-text">ASSETS</span></h2>
+                            <p class="text-xl text-gray-400 font-light">Tokenizace a suverénní vlastnictví.</p>
+                        </header>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- NFT -->
+                            <div class="glass-panel p-8 text-center border-green-500/20 hover:border-green-500/50 transition-colors">
+                                <div class="w-48 h-48 mx-auto bg-gradient-to-t from-gray-900 to-black border border-green-500/30 mb-6 flex items-center justify-center relative group">
+                                    <div class="absolute inset-0 bg-green-500/5 animate-pulse"></div>
+                                    <i data-lucide="box" class="w-20 h-20 text-green-500 group-hover:scale-110 transition-transform duration-500"></i>
+                                </div>
+                                <h3 class="text-2xl text-white font-bold mb-1">NFT STANDARD</h3>
+                                <p class="text-xs text-gray-500 font-mono mb-4">ERC-721 / UNIQUE ASSET</p>
+                                <p class="text-gray-400 text-sm leading-relaxed">
+                                    Digitální certifikát vlastnictví. Kód, který říká "toto je originál a patří této adrese".
+                                </p>
+                            </div>
+
+                            <!-- DeFi -->
+                            <div class="glass-panel p-8 flex flex-col justify-center border-green-500/20">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <i data-lucide="trending-up" class="text-green-400 w-6 h-6"></i>
+                                    <h3 class="text-2xl text-white font-bold">DECENTRALIZED FINANCE</h3>
+                                </div>
+                                <div class="bg-black/50 p-6 border border-white/5 mb-6">
+                                    <div class="flex justify-between text-[10px] text-gray-500 uppercase tracking-widest mb-4">
+                                        <span>Liquidity Pool</span>
+                                        <span>APY: <span class="text-green-400">12%</span></span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="0" class="w-full h-1 bg-gray-800 appearance-none cursor-pointer accent-green-500 mb-6" oninput="updateYield(this.value)">
+                                    <div class="text-center">
+                                        <div class="text-4xl font-mono text-white tracking-tighter" id="yield-display">0.00</div>
+                                        <div class="text-xs text-gray-600 mt-1 uppercase">Earned Tokens</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-16 text-center">
+                            <button onclick="location.reload()" class="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                                Re-Initialize System
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
 
-            app.innerHTML = contentHTML;
+            app.innerHTML = html;
             lucide.createIcons();
-
-            // Post-render Logic
-            if(phaseId === 'decentralization') {
-                setTimeout(drawMeshNetwork, 100);
-            }
         }
 
-        // --- PHASE 1 LOGIC (Network) ---
+        // --- INTERACTION LOGIC ---
+
         function hackCentral() {
             const core = $('#central-core');
-            const icon = core.querySelector('i');
-            const satellites = $$('.satellite');
             const container = $('#central-network');
-
-            // Hack effect
-            core.classList.remove('bg-white', 'glow-teal');
-            core.classList.add('bg-red-500', 'glow-red', 'shake');
-            icon.style.color = 'white';
             
-            // Satellites die
-            satellites.forEach(s => {
-                s.style.backgroundColor = '#ef4444'; // red
-                s.style.boxShadow = '0 0 10px red';
-                const i = s.querySelector('i');
-                if(i) i.setAttribute('data-lucide', 'x-circle'); // Change icon to error
-            });
-            lucide.createIcons();
-
-            container.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-
-            showToast('CHYBA: Server spadl! Všichni uživatelé ztratili přístup k bankovnictví.', 'error');
+            core.classList.remove('bg-gray-800');
+            core.classList.add('bg-red-600', 'animate-pulse');
+            container.style.borderColor = 'rgba(220, 38, 38, 0.5)';
+            
+            showToast('SYSTEM FAILURE: CENTRAL NODE COMPROMISED', 'error');
         }
 
-        function drawMeshNetwork() {
-            const grid = $('#mesh-grid');
-            if(!grid) return;
+        function hackNode(el) {
+            if(el.classList.contains('bg-red-500')) return;
+            el.classList.replace('bg-cyan-900/20', 'bg-red-500');
+            el.classList.add('scale-90');
             
-            grid.innerHTML = '';
-            for(let i=0; i<6; i++) {
-                const node = document.createElement('div');
-                node.className = 'w-12 h-12 bg-teal-500 rounded-full glow-teal cursor-pointer transition-colors duration-300 relative mesh-node flex items-center justify-center border-2 border-white/20 hover:scale-110';
-                node.id = `node-${i}`;
-                node.onclick = (e) => hackMeshNode(e.currentTarget);
-                
-                // Icon inside
-                const icon = document.createElement('i');
-                icon.setAttribute('data-lucide', 'monitor');
-                icon.className = "text-black w-6 h-6";
-                node.appendChild(icon);
-
-                grid.appendChild(node);
-            }
-            lucide.createIcons();
-        }
-
-        function hackMeshNode(node) {
-            if (node.classList.contains('bg-red-500')) return; // Already hacked
-
-            node.classList.remove('bg-teal-500', 'glow-teal');
-            node.classList.add('bg-red-500', 'glow-red');
-            const icon = node.querySelector('i');
-            if(icon) icon.className = "text-white w-6 h-6";
-            
-            showToast('INFO: Jeden počítač vypadl. Ostatní ale fungují dál, síť běží!', 'success');
-            
-            // Others flash green to show rerouting
+            // Pulse others
             $$('.mesh-node').forEach(n => {
-                if(n !== node && !n.classList.contains('bg-red-500')) {
-                    n.classList.add('scale-110', 'bg-green-400');
-                    setTimeout(() => n.classList.remove('scale-110', 'bg-green-400'), 500);
+                if(n !== el && !n.classList.contains('bg-red-500')) {
+                    n.classList.add('bg-green-500', 'scale-110');
+                    setTimeout(() => n.classList.remove('bg-green-500', 'scale-110'), 300);
                 }
             });
+            showToast('REROUTING TRAFFIC... NETWORK STABLE', 'info');
         }
 
-        // --- PHASE 2 LOGIC (Blockchain) ---
-        function updateAllHashesDisplay() {
-            recalcHashes();
-            STATE.blocks.forEach((block, idx) => {
-                const hashEl = $(`#hash-${idx}`);
-                const prevEl = $(`#prev-${idx}`);
-                if(hashEl) hashEl.innerText = block.hash;
-                if(prevEl) prevEl.innerText = block.prevHash;
-            });
-        }
-
-        function recalcHashes() {
-            let prev = "0000000000";
-            STATE.blocks.forEach((block, idx) => {
-                block.prevHash = prev;
-                // Cheat detection logic built into hash generation
-                block.hash = simpleHash(block.id + block.prevHash + block.data);
-                prev = block.hash;
-            });
-        }
-
+        // Blockchain Logic
         function updateBlockData(idx, val) {
             STATE.blocks[idx].data = val;
             recalcHashes();
-            
-            // Visual update loop
-            for(let i = idx; i < STATE.blocks.length; i++) {
-                const hashEl = $(`#hash-${i}`);
-                const prevEl = $(`#prev-${i+1}`); // The next block's prev hash display
-                const blockEl = $(`#block-${i}`);
-
-                if(hashEl) {
-                    hashEl.innerText = STATE.blocks[i].hash;
-                    hashEl.classList.add('text-white');
-                    setTimeout(() => hashEl.classList.remove('text-white'), 200);
-                }
-                
-                if(prevEl && i < STATE.blocks.length - 1) {
-                    prevEl.innerText = STATE.blocks[i+1].prevHash;
-                }
-            }
-            
-            checkChainValidity();
+            updateUIHashes();
+            checkChain();
         }
 
+        function recalcHashes() {
+            let prev = "00000000";
+            STATE.blocks.forEach(b => {
+                b.prevHash = prev;
+                b.hash = simpleHash(b.id + b.prevHash + b.data);
+                prev = b.hash;
+            });
+        }
+
+        function updateUIHashes() {
+            STATE.blocks.forEach((b, i) => {
+                const h = $(`#hash-${i}`);
+                if(h) h.innerText = b.hash;
+                if(i < STATE.blocks.length - 1) {
+                    const p = $(`#prev-${i+1}`);
+                    if(p) p.innerText = b.hash;
+                }
+            });
+        }
+
+        function checkChain() {
+            const valid = STATE.blocks[0].data.includes('50 coinů');
+            $$('[id^="block-"]').forEach((el, i) => {
+                if (i > 0) {
+                    if (!valid) el.classList.add('border-red-500');
+                    else el.classList.remove('border-red-500');
+                }
+            });
+            if (!valid) showToast('CHAIN INVALID: HASH MISMATCH DETECTED', 'error');
+        }
+        
         function cheatBlock() {
-            const textarea = document.querySelector('textarea'); // Gets first block's textarea
-            if(textarea) {
-                textarea.value = "Karel poslal 1000000 Kč SOBĚ";
-                // Trigger input event manually visual
-                textarea.focus();
-                updateBlockData(0, textarea.value);
-            }
-            showToast('Pozor! Změnili jste záznam. Všimněte si, jak se celý řetězec za ním rozbil (zčervenal).', 'error');
+            const ta = $('textarea');
+            if(ta) { ta.value = "HACK: 99999 coins"; updateBlockData(0, ta.value); }
         }
-
-        function checkChainValidity() {
-            const isOriginal = STATE.blocks[0].data.includes('50 Kč');
-            
-            if(!isOriginal) {
-                // Break the chain visual
-                $$('[id^="block-"]').forEach((el, i) => {
-                    if(i > 0) {
-                        el.classList.add('border-red-500', 'bg-red-900/20');
-                        el.classList.remove('border-gray-600');
-                        // Add warning icon
-                        if(!el.querySelector('.warn-icon')) {
-                             const warn = document.createElement('div');
-                             warn.className = "warn-icon absolute top-2 right-2 text-red-500 font-bold flex gap-1 items-center bg-black/50 px-2 rounded";
-                             warn.innerHTML = "NEPLATNÉ <i data-lucide='alert-triangle' class='w-4 h-4'></i>";
-                             el.appendChild(warn);
-                             lucide.createIcons();
-                        }
-                    }
-                });
-            } else {
-                 $$('[id^="block-"]').forEach((el, i) => {
-                    if(i > 0) {
-                        el.classList.remove('border-red-500', 'bg-red-900/20');
-                        el.classList.add('border-gray-600');
-                        const warn = el.querySelector('.warn-icon');
-                        if(warn) warn.remove();
-                    }
-                });
-            }
-        }
-
+        
         function repairChain() {
-            STATE.blocks[0].data = "Karel poslal 50 Kč Janě";
-            renderPhase(2); // Re-render to reset cleanly
-            showToast('Data opravena. Řetězec je opět platný.', 'success');
+            STATE.blocks[0].data = "Karel -> Jana: 50 coinů";
+            updateBlockData(0, STATE.blocks[0].data);
+            $('textarea').value = STATE.blocks[0].data;
+            showToast('LEDGER RESYNCED. INTEGRITY RESTORED.', 'info');
         }
 
-        // --- PHASE 3 LOGIC (Consensus) ---
+        // Consensus Logic
         function mineClick() {
             const bar = $('#mining-bar');
             const status = $('#mine-status');
-            const barText = bar.querySelector('span');
             
-            STATE.miningCount += 15; // Faster for beginners
+            STATE.miningCount += 10;
+            bar.style.width = Math.min(STATE.miningCount, 100) + '%';
+            status.innerText = 'HASHING: ' + Math.random().toString(16).substring(2, 8).toUpperCase();
             
-            if(STATE.miningCount <= 100) {
-                bar.style.width = `${STATE.miningCount}%`;
-                status.innerText = `Počítač počítá: ${Math.random().toString().substr(2, 6)}...`;
-            }
-
-            if(STATE.miningCount >= 100) {
-                STATE.miningCount = 0; // Reset for replayability
-                bar.style.width = '100%';
-                bar.classList.add('bg-green-400');
-                barText.innerText = "HOTOVO!";
-                status.innerText = "ÚLOHA VYŘEŠENA! MŮŽETE ZAPSAT BLOK.";
-                status.classList.add('text-green-400');
-                showToast('Výborně! Vyřešili jste úlohu první a dostáváte odměnu.', 'success');
-                setTimeout(() => {
-                    bar.style.width = '0%';
-                    bar.classList.remove('bg-green-400');
-                    status.classList.remove('text-green-400');
-                    status.innerText = "Klikáním simulujete práci počítače...";
-                    barText.innerText = "HLEDÁM...";
-                }, 3000);
+            if (STATE.miningCount >= 100) {
+                STATE.miningCount = 0;
+                bar.style.width = '0%';
+                status.innerText = 'BLOCK FOUND! NONCE: 2891';
+                showToast('PROOF OF WORK ACCEPTED', 'info');
             }
         }
 
         function updateStake(val) {
-            $('#stake-val').innerText = `${val} mincí`;
-            
-            // Simple probability curve
-            let chance = 0;
-            if(val > 0) chance = (val / 100 * 20).toFixed(0); 
-            
-            $('#win-chance').innerText = `${chance}%`;
+            $('#stake-val').innerText = val + ' ETH';
+            $('#win-chance').innerText = (val * 0.8).toFixed(1) + '%';
         }
 
-        // --- PHASE 4 LOGIC (Smart Contracts) ---
-        function triggerRain() {
-            const btn = document.querySelector('button[onclick="triggerRain()"]');
-            if(btn.disabled) return;
-            btn.disabled = true;
-
-            // 1. Rain Animation
-            const rainContainer = $('#rain-container');
-            rainContainer.innerHTML = '';
+        // Smart Contract Logic
+        function triggerContract() {
+            // Rain effect
+            const rainLayer = $('#rain-layer');
+            rainLayer.innerHTML = '';
             for(let i=0; i<30; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'absolute bg-blue-400 w-0.5 h-6 opacity-80';
-                drop.style.left = `${Math.random() * 100}%`;
-                drop.style.top = `-${Math.random() * 50}px`;
-                drop.style.animation = `fall ${0.5 + Math.random()}s linear infinite`;
-                rainContainer.appendChild(drop);
+                const d = document.createElement('div');
+                d.className = 'absolute bg-purple-500 w-[1px] h-4 opacity-50';
+                d.style.left = Math.random() * 100 + '%';
+                d.style.top = -10 + 'px';
+                d.style.animation = `blink ${Math.random() * 0.5 + 0.5}s infinite`;
+                rainLayer.appendChild(d);
             }
-
-            // CSS for rain
-            const style = document.createElement('style');
-            style.innerHTML = `@keyframes fall { to { transform: translateY(350px); } }`;
-            document.head.appendChild(style);
-
-            showToast('Zpráva z internetu: "V Praze prší". Automat se spouští.', 'info');
-
-            // 2. Logic Activation
+            
+            $('#icon-cloud').classList.add('text-purple-400');
+            showToast('ORACLE INPUT: RAIN DETECTED', 'info');
+            
             setTimeout(() => {
-                $('#flow-line').classList.remove('w-0');
-                $('#flow-line').classList.add('w-full');
-                $('#flow-line').classList.add('glow-purple');
-            }, 1500);
-
-            // 3. Money Transfer
+                $('#flow-signal').classList.replace('w-0', 'w-full');
+            }, 1000);
+            
             setTimeout(() => {
-                const coin = $('#flying-coin');
-                coin.classList.remove('opacity-0');
-                coin.classList.add('coin-animation');
-            }, 2000);
-
-            // 4. Receipt
-            setTimeout(() => {
-                $('#wallet-icon').classList.replace('border-gray-600', 'border-green-500');
-                $('#wallet-icon').classList.add('glow-green');
+                $('#icon-wallet').classList.add('text-green-400');
                 $('#wallet-balance').classList.remove('opacity-0');
-                showToast('HOTOVO: Peníze dorazily na váš účet. Bez papírování!', 'success');
-                
-                // Reset slightly
-                setTimeout(() => {
-                     btn.disabled = false;
-                     rainContainer.innerHTML = ''; // Stop rain
-                     $('#wallet-icon').classList.replace('border-green-500', 'border-gray-600');
-                     $('#wallet-icon').classList.remove('glow-green');
-                     $('#flow-line').classList.remove('w-full', 'glow-purple');
-                     $('#flow-line').classList.add('w-0');
-                }, 5000);
-            }, 3300);
+                showToast('CONTRACT EXECUTED: FUNDS TRANSFERRED', 'success');
+            }, 2000);
+            
+            setTimeout(() => {
+                 rainLayer.innerHTML = '';
+                 $('#flow-signal').classList.replace('w-full', 'w-0');
+                 $('#icon-cloud').classList.remove('text-purple-400');
+            }, 4000);
         }
 
-        // --- PHASE 5 LOGIC (DeFi) ---
+        // DeFi Logic
         function updateYield(val) {
-            // Visual feedback only
             if (val > 0) {
-                $('#yield-rate').innerText = `Úrok: 12% ročně`;
-                
-                if (!STATE.yieldInterval) {
-                    STATE.yieldInterval = setInterval(() => {
-                        // Increment based on slider value
-                        const increment = val * 0.05;
-                        STATE.yieldAmount += increment;
-                        $('#yield-display').innerText = STATE.yieldAmount.toFixed(0);
-                    }, 200);
-                }
+                 if (!STATE.yieldInterval) {
+                     STATE.yieldInterval = setInterval(() => {
+                         let current = parseFloat($('#yield-display').innerText);
+                         $('#yield-display').innerText = (current + 0.01 * (val/10)).toFixed(2);
+                     }, 100);
+                 }
             } else {
                 clearInterval(STATE.yieldInterval);
                 STATE.yieldInterval = null;
-                $('#yield-rate').innerText = `Úrok: 0%`;
             }
         }
-
-        // --- INIT ---
-        window.addEventListener('DOMContentLoaded', initApp);
 
     </script>
 </body>
